@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<html>
+<head>
+    <title>My Stuff Artists</title>
+</head>
+<body>
+    <ul>
+        <h1>My All Time Most Forgotten Artists:</h1>
+            <ul>
+                {% for artist in mFArtists %}
+                <li><b>{{ artist.name}}</b></li>
+                {% endfor %}
+            </ul>
+        <h2>Artists From a Year Ago:</h2>
+            <ul>
+                {% for artist in yArtists %}
+                <li><b>{{ artist.name}}</b></li>
+                {% endfor %}
+            </ul>
+        <h3>Artists From 6 Months Ago:</h3>
+            <ul>
+                {% for artist in sMArtists %}
+                <li><b>{{ artist.name}}</b></li>
+                {% endfor %}
+            </ul>
+    </ul>
+</body>
+</html>
+{% endblock %}
