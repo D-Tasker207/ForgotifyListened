@@ -29,20 +29,19 @@ app.route('/mystuff/artists')
 def mystuff():
     return "Hello, world!"
 
-app.route*('/mystuff/songs')
+app.route('/mystuff/songs')
 def songs():
     return "Hello, world!"
 
-app.route('recommended')
+app.route('/recommended')
 def recommended():
     return "Hello, world!"
 
-app.route('contact')
+app.route('/contact')
 def contact():
     return "Hello, world!"
 
-
-@app.route('login')
+@app.route('/login')
 def login():
     return "Hello, world!"
 
