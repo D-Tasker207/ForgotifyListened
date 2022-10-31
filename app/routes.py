@@ -1,6 +1,7 @@
 from app import app
 
 @app.route('/')
+@app.route('/home')
 def index():
     return "Hello, world!"
 
@@ -32,8 +33,16 @@ app.route*('/mystuff/songs')
 def songs():
     return "Hello, world!"
 
-
-
 app.route('recommended')
 def recommended():
     return "Hello, world!"
+
+app.route('contact')
+def contact():
+    return "Hello, world!"
+
+
+@app.route('login')
+def login():
+    return "Hello, world!"
+
