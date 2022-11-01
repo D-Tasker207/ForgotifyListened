@@ -22,7 +22,7 @@ def song(name):
 def songlist():
     return "Hello, world!"
 
-@app.route('album/<name>')
+@app.route('/album/<name>')
 def album(name):
     return "Hello, %s!" % name
 
