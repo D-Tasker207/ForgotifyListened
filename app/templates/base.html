@@ -6,10 +6,10 @@
             <a href="{{ url_for('index') }}"><b>Forgotify Listened:</b></a>
 
             <a href="{{ url_for('login') }}">Login</a>
-            <a href="{{ url_for('mystuff/songs') }}">My Stuff</a>
+            <a href="{{ url_for('mystuff') }}">My Stuff</a>
             <a href="{{  url_for('recommended') }}">Recommended</a>
             <a href="{{ url_for('logout') }}">Logout</a>
-            {% endif %}
+
         </div>
         <hr>
         {%  with messages = get_flashed_messages() %}
