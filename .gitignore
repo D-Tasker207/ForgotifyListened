@@ -55,6 +55,10 @@ coverage.xml
 *.mo
 *.pot
 
+#environemnts
+.env
+.flaskenv
+
 # Django stuff:
 *.log
 local_settings.py
@@ -83,6 +87,7 @@ ipython_config.py
 
 # pyenv
 .python-version
+
 
 # pipenv
 #   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
