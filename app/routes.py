@@ -38,12 +38,12 @@ def album(name):
     return "Hello, %s!" % name
 
 @app.route('/mystuff/artists')
-def mystuff():
-    return "Hello, world!"
+def mystuffartists():
+    return render_template('myStuffArtists.html')
 
 @app.route('/mystuff/songs')
-def songs():
-    return "Hello, world!"
+def mystuffsongs():
+    return render_template('myStuffSongs.html')
 
 @app.route('/recommended')
 def recommended():
