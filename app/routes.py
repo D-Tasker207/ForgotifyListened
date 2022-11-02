@@ -4,7 +4,7 @@ from flask import render_template, redirect, url_for
 @app.route('/')
 @app.route('/index')
 def index():
-    return "Hello, World!"
+    return render_template('home.html')
 
 @app.route('/artist/<name>')
 def artist(name):
