@@ -1,31 +1,19 @@
-import os
-import requests
-from dotenv import load_dotenv
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth
 
-load_dotenv()
+class Spotify:
 
-CLIENT_ID = os.getenv("CLIENT_ID");
-CLIENT_SECRET = os.getenv("CLIENT_SECRET");
+    sp = None
+    
+    def __init__(self):
+        scope = "user-library-read"
+        self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
 
-AUTH_URL = 'https://accounts.spotify.com/api/token'
+    def example_get(self):
+        myList = []
+        results = self.sp.current_user_saved_tracks()
+        for idx, item in enumerate(results['items']):
+            track = item['track']
+            myList.append((idx, track['artists'][0]['name'], "-", track['name']))
 
-auth_response = requests.post(AUTH_URL, {
-    'grant_type': 'client_credentials',
-    'client_id': CLIENT_ID,
-    'client_secret': CLIENT_SECRET,
-})
-
-auth_response_data = auth_response.json()
-
-access_token = auth_response_data['access_token']
-
-headers = {'Authorization': 'Bearer {token}'.format(token=access_token)}
-
-BASE_URL = 'https://api.spotify.com/v1/'
-
-track_id = '5jnoK2o5jY46qhPR30RepX?si=5cbc9ebf83014961'
-
-r = requests.get(BASE_URL + 'audio-features/' + track_id, headers=headers)
-r.json()
-
-print(r.text)
+        return myList
