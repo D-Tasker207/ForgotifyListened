@@ -47,7 +47,7 @@ def mystuffsongs():
 
 @app.route('/recommended')
 def recommended():
-    return "Hello, world!"
+    return render_template('recommended.html')
 
 @app.route('/contact')
 def contact():
