@@ -1,4 +1,11 @@
 <html>
+    <style>
+        p{
+            display: flex;
+            justify-content: center;
+            vertical-align: bottom;
+        }
+    </style>
     <head>
     </head>
     <body>
@@ -6,7 +13,7 @@
             <a href="{{ url_for('index') }}"><b>Forgotify Listened:</b></a>
 
             <a href="{{ url_for('login') }}">Login</a>
-            <a href="{{ url_for('mystuff') }}">My Stuff</a>
+            <a href="{{ url_for('mystuffsongs') }}">My Stuff</a>
             <a href="{{  url_for('recommended') }}">Recommended</a>
             <a href="{{ url_for('logout') }}">Logout</a>
 
@@ -22,5 +29,10 @@
         {% endif %}
         {% endwith %}
         {% block content %}{% endblock %}
+        <p valine="bottom">
+            <a href="{{ url_for('contact') }}">Contact Us</a>
+        </p>
+
     </body>
+
 </html>

@@ -7,50 +7,64 @@ from app.spotify_service import example_get
 
 scope = "user-top-read user-read-email playlist-modify-public"
 
+
 @app.route('/')
 @app.route('/index')
 def index():
     return render_template('home.html')
 
+
 @app.route('/spotipytest')
 def spotipytest():
     return render_template('spotipy_test.html', songs=example_get())
+
 
 @app.route('/artist/<name>')
 def artist(name):
     return "Hello, %s!" % name
 
+
 @app.route('/artistlist')
 def artistlist():
     return "Hello, world!"
+
 
 @app.route('/song/<name>')
 def song(name):
     return "Hello, %s!" % name
 
+
 @app.route('/songlist')
 def songlist():
     return "Hello, world!"
+
 
 @app.route('/album/<name>')
 def album(name):
     return "Hello, %s!" % name
 
+
 @app.route('/mystuff/artists')
-def mystuff():
-    return "Hello, world!"
+def mystuffartists():
+    return render_template('myStuffArtists.html')
+
 
 @app.route('/mystuff/songs')
-def songs():
-    return "Hello, world!"
+def mystuffsongs():
+    return render_template('myStuffSongs.html')
+
 
 @app.route('/recommended')
 def recommended():
+    return render_template('recommended.html')
+
+
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    # form = ContactUsForm()
+    # return render_template('contact.html', title='Contact Us', form=form)
     return "Hello, world!"
 
-@app.route('/contact')
-def contact():
-    return "Hello, world!"
 
 @app.route('/login')
 def login():
@@ -68,6 +82,7 @@ def callback():
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
     auth_manager.get_access_token(request.args.get("code"))
     return redirect('/')
+
 
 @app.route('/logout')
 def logout():
