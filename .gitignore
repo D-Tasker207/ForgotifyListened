@@ -58,6 +58,8 @@ coverage.xml
 #environemnts
 .env
 .flaskenv
+.flask_session
+.cache-user-top-read
 
 # Django stuff:
 *.log
@@ -123,3 +125,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+

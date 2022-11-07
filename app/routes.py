@@ -5,7 +5,7 @@ from flask import render_template, redirect, url_for, session, request
 
 from app.spotify_service import example_get
 
-scope = "user-top-read"
+scope = "user-top-read user-read-email playlist-modify-public"
 
 @app.route('/')
 @app.route('/index')
@@ -14,7 +14,7 @@ def index():
 
 @app.route('/spotipytest')
 def spotipytest():
-    return render_template('spotipy_test.html', songs=example_get())
+    return example_get() #render_template('spotipy_test.html', songs=example_get())
 
 @app.route('/artist/<name>')
 def artist(name):
@@ -73,4 +73,3 @@ def callback():
 def logout():
     session.pop("token_info", None)
     return redirect(url_for("index"))
-
