@@ -29,7 +29,9 @@
         {% endif %}
         {% endwith %}
         {% block content %}{% endblock %}
-        <p valine="bottom">hi</p>
+        <p valine="bottom">
+            <a href="{{ url_for('contact') }}">Contact Us</a>
+        </p>
 
     </body>
 
