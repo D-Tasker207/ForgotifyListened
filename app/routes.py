@@ -1,24 +1,24 @@
-from app import app
-from flask import render_template, redirect, url_for
-# from app.forms import ContactUsForm
-from app.spotify_service import Spotify
+import spotipy
+from app import app, db
+from spotipy.oauth2 import SpotifyOAuth
+from flask import render_template, redirect, url_for, session, request
+from flask_login import current_user, login_user, logout_user, login_required
+from app.spotify_service import example_get, get_user_email
+from app.models import User, Song, Album, Artist
+
+SCOPE = "user-top-read user-read-email playlist-modify-public"
 
 
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('home.html')
+    return render_template('index.html')
 
 
 @app.route('/spotipytest')
+@login_required
 def spotipytest():
-    session = Spotify()
-    return session.example_get()
-
-
-@app.route('/callback')
-def callback():
-    return redirect(url_for('index'))
+    return render_template('spotipy_test.html', songs=example_get())
 
 
 @app.route('/artist/<name>')
@@ -47,11 +47,13 @@ def album(name):
 
 
 @app.route('/mystuff/artists')
+@login_required
 def mystuffartists():
     return render_template('myStuffArtists.html')
 
 
 @app.route('/mystuff/songs')
+@login_required
 def mystuffsongs():
     return render_template('myStuffSongs.html')
 
@@ -70,10 +72,39 @@ def contact():
 
 @app.route('/login')
 def login():
-    return "Hello, world!"
+    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(scope=SCOPE,
+                                               cache_handler=cache_handler,
+                                               show_dialog=True)
+
+    auth_url = auth_manager.get_authorize_url()
+    return f'<h2><a href="{auth_url}">Sign in</a></h2>'
+
+@app.route('/callback')
+def callback():
+    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    auth_manager.get_access_token(request.args.get("code"))
+
+    user = User.query.filter_by(email=get_user_email()['email']).first()
+
+    if user is None:
+        user = User(email=get_user_email()['email'])
+        db.session.add(user)
+        db.session.commit()
+
+        login_user(user)
+    else:
+        login_user(user)
+    return redirect('/')
 
 
 @app.route('/logout')
 def logout():
-    return "Hello, world!"
+    session.pop("token_info", None)
+    logout_user()
+    return redirect(url_for("index"))
 
+@app.route('/get_email')
+def get_email():
+    return get_user_email()
