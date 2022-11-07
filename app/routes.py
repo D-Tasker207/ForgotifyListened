@@ -12,7 +12,7 @@ SCOPE = "user-top-read user-read-email playlist-modify-public"
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('home.html')
+    return render_template('index.html')
 
 
 @app.route('/spotipytest')
@@ -47,11 +47,13 @@ def album(name):
 
 
 @app.route('/mystuff/artists')
+@login_required
 def mystuffartists():
     return render_template('myStuffArtists.html')
 
 
 @app.route('/mystuff/songs')
+@login_required
 def mystuffsongs():
     return render_template('myStuffSongs.html')
 
