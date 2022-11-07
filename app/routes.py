@@ -1,11 +1,12 @@
 import spotipy
-from app import app
+from app import app, db
 from spotipy.oauth2 import SpotifyOAuth
 from flask import render_template, redirect, url_for, session, request
+from flask_login import current_user, login_user, logout_user, login_required
+from app.spotify_service import example_get, get_user_email
+from app.models import User, Song, Album, Artist
 
-from app.spotify_service import example_get
-
-scope = "user-top-read user-read-email playlist-modify-public"
+SCOPE = "user-top-read user-read-email playlist-modify-public"
 
 
 @app.route('/')
@@ -15,6 +16,7 @@ def index():
 
 
 @app.route('/spotipytest')
+@login_required
 def spotipytest():
     return render_template('spotipy_test.html', songs=example_get())
 
@@ -69,7 +71,7 @@ def contact():
 @app.route('/login')
 def login():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
-    auth_manager = spotipy.oauth2.SpotifyOAuth(scope=scope,
+    auth_manager = spotipy.oauth2.SpotifyOAuth(scope=SCOPE,
                                                cache_handler=cache_handler,
                                                show_dialog=True)
 
@@ -81,10 +83,26 @@ def callback():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
     auth_manager.get_access_token(request.args.get("code"))
+
+    user = User.query.filter_by(email=get_user_email()['email']).first()
+
+    if user is None:
+        user = User(email=get_user_email()['email'])
+        db.session.add(user)
+        db.session.commit()
+
+        login_user(user)
+    else:
+        login_user(user)
     return redirect('/')
 
 
 @app.route('/logout')
 def logout():
     session.pop("token_info", None)
+    logout_user()
     return redirect(url_for("index"))
+
+@app.route('/get_email')
+def get_email():
+    return get_user_email()

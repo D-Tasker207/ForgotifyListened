@@ -7,3 +7,4 @@ Flask-Migrate
 Spotipy
 python-dotenv
 Flask-Session
+Flask-Login

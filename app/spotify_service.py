@@ -1,15 +1,13 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-from flask import session, request, redirect
-
-scope = "user-top-read"
+from flask import session, redirect, url_for
 
 def example_get():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
 
-    # if not auth_manager.validate_token(cache_handler.get_cached_token()):
-    #     return redirect('/')
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return redirect(url_for('index'))
 
     sp = spotipy.Spotify(auth_manager=auth_manager)
 
@@ -28,3 +26,10 @@ def example_get():
         myList.append(thisSong)
             
     return myList
+
+def get_user_email():
+    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    sp = spotipy.Spotify(auth_manager=auth_manager)
+
+    return sp.current_user()
