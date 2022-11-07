@@ -14,7 +14,7 @@ def index():
 
 @app.route('/spotipytest')
 def spotipytest():
-    return example_get() #render_template('spotipy_test.html', songs=example_get())
+    return render_template('spotipy_test.html', songs=example_get())
 
 @app.route('/artist/<name>')
 def artist(name):
