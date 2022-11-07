@@ -1,19 +1,30 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
+from flask import session, request, redirect
 
-class Spotify:
+scope = "user-top-read"
 
-    sp = None
-    
-    def __init__(self):
-        scope = "user-library-read"
-        self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
+def example_get():
+    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
 
-    def example_get(self):
-        myList = []
-        results = self.sp.current_user_saved_tracks()
-        for idx, item in enumerate(results['items']):
-            track = item['track']
-            myList.append((idx, track['artists'][0]['name'], "-", track['name']))
+    # if not auth_manager.validate_token(cache_handler.get_cached_token()):
+    #     return redirect('/')
 
-        return myList
+    sp = spotipy.Spotify(auth_manager=auth_manager)
+
+    myList = []
+    results = sp.current_user_top_tracks(limit=50, time_range="short_term")
+
+    for idx, item in enumerate(results['items']):
+        thisSong = {
+            'name': item['name'],
+            'img': item['album']['images'][2]['url'],
+        }
+        artists = []
+        for artist in item['artists']:
+            artists.append(artist['name'])
+        thisSong['artists'] = artists
+        myList.append(thisSong)
+            
+    return myList

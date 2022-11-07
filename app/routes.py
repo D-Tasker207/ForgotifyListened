@@ -1,7 +1,11 @@
+import spotipy
 from app import app
-from flask import render_template, redirect, url_for
+from spotipy.oauth2 import SpotifyOAuth
+from flask import render_template, redirect, url_for, session, request
 
-from app.spotify_service import Spotify
+from app.spotify_service import example_get
+
+scope = "user-top-read"
 
 @app.route('/')
 @app.route('/index')
@@ -10,12 +14,7 @@ def index():
 
 @app.route('/spotipytest')
 def spotipytest():
-    session = Spotify()
-    return session.example_get()
-
-@app.route('/callback')
-def callback():
-    return redirect(url_for('index'))
+    return render_template('spotipy_test.html', songs=example_get())
 
 @app.route('/artist/<name>')
 def artist(name):
@@ -55,9 +54,23 @@ def contact():
 
 @app.route('/login')
 def login():
-    return "Hello, world!"
+    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(scope=scope,
+                                               cache_handler=cache_handler,
+                                               show_dialog=True)
+
+    auth_url = auth_manager.get_authorize_url()
+    return f'<h2><a href="{auth_url}">Sign in</a></h2>'
+
+@app.route('/callback')
+def callback():
+    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    auth_manager.get_access_token(request.args.get("code"))
+    return redirect('/')
 
 @app.route('/logout')
 def logout():
-    return "Hello, world!"
+    session.pop("token_info", None)
+    return redirect(url_for("index"))
 

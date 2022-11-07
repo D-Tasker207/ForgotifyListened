@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% for song in songs %}
+    <div>
+        <p>
+            <img src="{{ song.img }}">
+            {{ song.name }} by 
+            {% for artist in song.artists %}
+                {{ artist }},
+            {% endfor %}
+        </p>
+    </div>
+    {% endfor %}
+{% endblock %}
