@@ -3,7 +3,7 @@ from app import app, db
 from spotipy.oauth2 import SpotifyOAuth
 from flask import render_template, redirect, url_for, session, request
 from flask_login import current_user, login_user, logout_user, login_required
-from app.spotify_service import example_get, get_user_email
+from app.spotify_service import example_get, get_user
 from app.models import User, Song, Album, Artist
 
 SCOPE = "user-top-read user-read-email playlist-modify-public"
@@ -78,8 +78,7 @@ def login():
                                                show_dialog=True)
 
     auth_url = auth_manager.get_authorize_url()
-    #return f'<h2><a href="{auth_url}">Sign in</a></h2>'
-    return render_template('signin.html', auth_url=auth_url)
+    return redirect(auth_url)
 
 @app.route('/callback')
 def callback():
@@ -87,10 +86,10 @@ def callback():
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
     auth_manager.get_access_token(request.args.get("code"))
 
-    user = User.query.filter_by(email=get_user_email()['email']).first()
+    user = User.query.filter_by(email=get_user()['email']).first()
 
     if user is None:
-        user = User(email=get_user_email()['email'])
+        user = User(email=get_user()['email'])
         db.session.add(user)
         db.session.commit()
 
@@ -108,4 +107,4 @@ def logout():
 
 @app.route('/get_email')
 def get_email():
-    return get_user_email()
+    return get_user()
