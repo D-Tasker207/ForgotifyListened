@@ -13,4 +13,4 @@ session = Session(app)
 login = LoginManager(app)
 session.init_app(app)
 
-from app import routes, models
+from app import routes, models, error
