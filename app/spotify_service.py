@@ -37,8 +37,26 @@ def get_user():
 
     return sp.current_user()
 
+def get_new_user_data():
+    short_term_data = get_user_current_tracks("short_term")
+    medium_term_data = get_user_current_tracks("medium_term")
+    long_term_data = get_user_current_tracks("long_term")
 
-def get_user_current_trcks():
+    user_data = [short_term_data, medium_term_data, long_term_data]
+
+    for data in user_data:
+        add_artists_to_db(data[0])
+        add_albums_to_db(data[1])
+        add_songs_to_db(data[2])
+
+    return user_data
+
+#this is not a good name for the function but idk what a a better name would be. 
+# it creates the links between the user and the music stuff for the mystuff pages
+def create_user_connections():
+    pass
+
+def get_user_current_tracks(time_range):
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
     sp = spotipy.Spotify(auth_manager=auth_manager)
@@ -46,7 +64,7 @@ def get_user_current_trcks():
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
         return redirect(url_for('index'))
 
-    results = sp.current_user_top_tracks(limit=50, time_range="short_term")
+    results = sp.current_user_top_tracks(limit=50, time_range=time_range)
 
     songs = []
     artists = []
@@ -70,9 +88,9 @@ def get_user_current_trcks():
             thisArtist = {
                 'id': artist_info['id'],
                 'name': artist_info['name'],
+                'img': artist_info['images'][0]['url'],
                 'external_url': artist_info['external_urls']['spotify'],
-                'uri': artist_info['uri'],
-                'img': artist_info['images'][0]['url']
+                'uri': artist_info['uri']
             }
             artists.append(thisArtist)
         songs.append(thisSong)
@@ -96,7 +114,13 @@ def add_artists_to_db(artists_list):
         artist_exists = Artist.query.filter_by(id=artist['id']).first()
 
         if artist_exists == None:
-            new_artist = Artist(id=artist['id'], name=artist['name'], img=artist['img'], external_url=artist['external_url'], uri=artist['uri'])
+            new_artist = Artist(
+                id=artist['id'], 
+                name=artist['name'], 
+                img=artist['img'], 
+                external_url=artist['external_url'], 
+                uri=artist['uri']
+            )
             artists_to_add.append(new_artist)
     
     db.session.addAll(artists_to_add)
@@ -108,7 +132,14 @@ def add_albums_to_db(albums_list):
         album_exists = Album.query.filter_by(id=album['id']).first()
 
         if album_exists == None:
-            new_album = Album(id=album['id'], name=album['name'], img=album['img'], external_url=album['external_url'], uri=album['uri'], artist_id=album['artist_id'])
+            new_album = Album(
+                id=album['id'], 
+                name=album['name'], 
+                img=album['img'], 
+                external_url=album['external_url'], 
+                uri=album['uri'], 
+                artist_id=album['artist_id']
+            )
             albums_to_add.append(new_album)
 
     db.session.addAll(albums_to_add)   
@@ -121,10 +152,20 @@ def add_songs_to_db(songs_list):
         song_exists = Song.query.filter_by(id=song['id']).first()
 
         if song_exists == None:
-            new_song = Song(id=song['id'], name=song['name'], img=song['img'], external_url=song['external_url'], uri=song['uri'], albut_id=song['album_id'])
+            new_song = Song(
+                id=song['id'], 
+                name=song['name'], 
+                img=song['img'], 
+                external_url=song['external_url'], 
+                uri=song['uri'], 
+                album_id=song['album_id']
+            )
             songs_to_add.append(new_song)
             for artist in song['artists']:
-                new_artist_to_song = ArtistToSong(artist_id=artist, song_id=song['id'])
+                new_artist_to_song = ArtistToSong(
+                    artist_id=artist, 
+                    song_id=song['id']
+                )
                 artist_to_song_to_add.append(new_artist_to_song)
     
     db.session.addAll(songs_to_add)
