@@ -4,6 +4,7 @@ from flask_login import UserMixin
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64))
+    last_pulled = db.Column(db.DateTime)
 
 @login.user_loader
 def load_user(id):

@@ -78,7 +78,8 @@ def login():
                                                show_dialog=True)
 
     auth_url = auth_manager.get_authorize_url()
-    return f'<h2><a href="{auth_url}">Sign in</a></h2>'
+    #return f'<h2><a href="{auth_url}">Sign in</a></h2>'
+    return render_template('signin.html', auth_url=auth_url)
 
 @app.route('/callback')
 def callback():

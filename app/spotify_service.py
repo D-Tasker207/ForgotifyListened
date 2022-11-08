@@ -33,3 +33,4 @@ def get_user_email():
     sp = spotipy.Spotify(auth_manager=auth_manager)
 
     return sp.current_user()
+
