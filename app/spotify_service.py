@@ -45,9 +45,10 @@ def get_new_user_data():
     user_data = [short_term_data, medium_term_data, long_term_data]
 
     for data in user_data:
-        add_artists_to_db(data[0])
-        add_albums_to_db(data[1])
-        add_songs_to_db(data[2])
+        add_songs_to_db(data[0])
+        add_artists_to_db(data[1])
+        add_albums_to_db(data[2])
+        
 
     return user_data
 
@@ -88,10 +89,14 @@ def get_user_current_tracks(time_range):
             thisArtist = {
                 'id': artist_info['id'],
                 'name': artist_info['name'],
-                'img': artist_info['images'][0]['url'],
                 'external_url': artist_info['external_urls']['spotify'],
                 'uri': artist_info['uri']
             }
+            try:
+                thisArtist['img']= artist_info['images'][0]['url']
+            except IndexError:
+                thisArtist['img'] = 'na'
+
             artists.append(thisArtist)
         songs.append(thisSong)
 
@@ -101,7 +106,7 @@ def get_user_current_tracks(time_range):
             'img': track['album']['images'][0]['url'],
             'external_url': track['album']['external_urls']['spotify'],
             'uri': track['album']['uri'],
-            'artist_id': track['album']['artist'][0]['id']
+            'artist_id': track['album']['artists'][0]['id']
         }
 
         albums.append(thisAlbum)
@@ -109,7 +114,6 @@ def get_user_current_tracks(time_range):
     return (songs, artists, albums)
 
 def add_artists_to_db(artists_list):
-    artists_to_add = []
     for artist in artists_list:
         artist_exists = Artist.query.filter_by(id=artist['id']).first()
 
@@ -121,13 +125,11 @@ def add_artists_to_db(artists_list):
                 external_url=artist['external_url'], 
                 uri=artist['uri']
             )
-            artists_to_add.append(new_artist)
+            db.session.add(new_artist)
     
-    db.session.addAll(artists_to_add)
     db.session.commit()
 
 def add_albums_to_db(albums_list):
-    albums_to_add = []
     for album in albums_list:
         album_exists = Album.query.filter_by(id=album['id']).first()
 
@@ -140,14 +142,11 @@ def add_albums_to_db(albums_list):
                 uri=album['uri'], 
                 artist_id=album['artist_id']
             )
-            albums_to_add.append(new_album)
-
-    db.session.addAll(albums_to_add)   
+            db.session.add(new_album)
+ 
     db.session.commit()
 
 def add_songs_to_db(songs_list):
-    songs_to_add = []
-    artist_to_song_to_add = []
     for song in songs_list:
         song_exists = Song.query.filter_by(id=song['id']).first()
 
@@ -155,19 +154,16 @@ def add_songs_to_db(songs_list):
             new_song = Song(
                 id=song['id'], 
                 name=song['name'], 
-                img=song['img'], 
                 external_url=song['external_url'], 
                 uri=song['uri'], 
                 album_id=song['album_id']
             )
-            songs_to_add.append(new_song)
+            db.session.add(new_song)
             for artist in song['artists']:
                 new_artist_to_song = ArtistToSong(
                     artist_id=artist, 
                     song_id=song['id']
                 )
-                artist_to_song_to_add.append(new_artist_to_song)
-    
-    db.session.addAll(songs_to_add)
-    db.session.addAll(artist_to_song_to_add)
+                db.session.add(new_artist_to_song)
+
     db.session.commit()
