@@ -3,8 +3,8 @@
         {
             "previewLimit": 50,
             "driver": "SQLite",
-            "name": "Forgotify",
-            "database": "${workspaceFolder:ForgotifyListened}/app.db"
+            "database": "${workspaceFolder:ForgotifyListened}/app.db",
+            "name": "Forgotify"
         }
     ]
 }

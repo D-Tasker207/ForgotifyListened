@@ -1,7 +1,6 @@
 import spotipy
 from datetime import timedelta, datetime
 from app import app, db
-from spotipy.oauth2 import SpotifyOAuth
 from flask import render_template, redirect, url_for, session, request
 from flask_login import current_user, login_user, logout_user, login_required
 from app.spotify_service import example_get, get_user, get_new_user_data
@@ -16,7 +15,6 @@ SCOPE = "user-top-read user-read-email playlist-modify-public"
 #     if current_user.last_pulled < today - timedelta(days=90):
 #         user_data = get_new_user_data()
 #         current_user.last_pulled = datetime.now()
-
 
 
 @app.route('/')
@@ -110,6 +108,7 @@ def callback():
 
 
 @app.route('/logout')
+@login_required
 def logout():
     session.pop("token_info", None)
     logout_user()
@@ -118,3 +117,11 @@ def logout():
 @app.route('/get_email')
 def get_email():
     return get_user()
+
+
+@app.route('/testdbpull')
+@login_required
+def testdbpull():
+    user_data = get_new_user_data()
+    return user_data
+
