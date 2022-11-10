@@ -12,7 +12,8 @@ def example_get():
     sp = spotipy.Spotify(auth_manager=auth_manager)
 
     myList = []
-    results = sp.current_user_top_tracks(limit=50, time_range="short_term")
+    results = sp.current_user_top_tracks(limit=50, time_range="long_term")
+
 
     for idx, item in enumerate(results['items']):
         thisSong = {

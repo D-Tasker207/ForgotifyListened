@@ -18,6 +18,7 @@ def index():
 @app.route('/spotipytest')
 @login_required
 def spotipytest():
+
     return render_template('spotipy_test.html', songs=example_get())
 
 
@@ -33,7 +34,7 @@ def artistlist():
 
 @app.route('/song/<name>')
 def song(name):
-    return "Hello, %s!" % name
+    return render_template('song.html')
 
 
 @app.route('/songlist')
@@ -108,3 +109,15 @@ def logout():
 @app.route('/get_email')
 def get_email():
     return get_user_email()
+
+@app.route('/my_most_forgotten_songs')
+def mfsongs():
+    return render_template('mfSongs.html')
+
+@app.route('/songs_from_a_year_ago')
+def year_ago_songs():
+    return render_template('oneYearSongs.html')
+
+@app.route('/songs_from_6_months_ago')
+def six_months_songs():
+    return render_template('sixMonthsSongs.html')
