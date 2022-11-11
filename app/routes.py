@@ -117,8 +117,8 @@ def logout():
 
 @app.route('/get_email')
 def get_email():
-<<<<<<< HEAD
-    return get_user_email()
+    return get_user()
+    # return 'Hello, World!'
 
 @app.route('/my_most_forgotten_songs')
 def mfsongs():
@@ -131,8 +131,6 @@ def year_ago_songs():
 @app.route('/songs_from_6_months_ago')
 def six_months_songs():
     return render_template('sixMonthsSongs.html')
-=======
-    return get_user()
 
 
 @app.route('/testdbpull')
@@ -140,5 +138,3 @@ def six_months_songs():
 def testdbpull():
     user_data = get_new_user_data()
     return user_data
-
->>>>>>> 4d63203a9e18bdfcdff34df2fefc9b7a9998738c
