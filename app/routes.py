@@ -60,10 +60,46 @@ def mystuffartists():
     return render_template('myStuffArtists.html')
 
 
+@app.route('/most_forgotten_artists')
+@login_required
+def mostforgottenartists():
+    return render_template('mostForgottenArtists.html')
+
+
+@app.route('/one_year_artists')
+@login_required
+def oneyearartists():
+    return render_template('yearAgoArtists.html')
+
+
+@app.route('/six_months_artists')
+@login_required
+def sixmonthsartists():
+    return render_template('sixMonthsArtists.html')
+
+
 @app.route('/mystuff/songs')
 @login_required
 def mystuffsongs():
     return render_template('myStuffSongs.html')
+
+
+@app.route('/most_forgotten_songs')
+@login_required
+def mostforgottensongs():
+    return render_template('mostForgottenSongs.html')
+
+
+@app.route('/one_year_songs')
+@login_required
+def oneyearsongs():
+    return render_template('yearAgoSongs.html')
+
+
+@app.route('/six_months_songs')
+@login_required
+def sixmonthssongs():
+    return render_template('sixMonthsSongs.html')
 
 
 @app.route('/recommended')

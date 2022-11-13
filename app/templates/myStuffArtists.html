@@ -7,9 +7,13 @@
     <title>My Stuff Artists</title>
 </head>
 <body>
+    <a href="{{ url_for('mystuffsongs') }}">My Stuff Songs</a>
     <h2>My All Time Most Forgotten Artists:</h2>
+    <a href="{{ url_for('mostforgottenartists') }}">Most Forgotten Artists</a>
     <h2>Artists From a Year Ago:</h2>
+    <a href="{{ url_for('oneyearartists') }}">Year Ago Artists</a>
     <h2>Artists From 6 Months Ago:</h2>
+    <a href="{{ url_for('sixmonthsartists') }}">Six Months Artists</a>
 </body>
 </html>
 {% endblock %}
