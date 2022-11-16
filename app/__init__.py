@@ -16,3 +16,4 @@ session.init_app(app)
 bootstrap = Bootstrap(app)
 
 from app import routes, models, error
+
