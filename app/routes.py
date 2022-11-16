@@ -4,7 +4,7 @@ from app import app, db
 from flask import render_template, redirect, url_for, session, request
 from flask_login import current_user, login_user, logout_user, login_required
 from app.spotify_service import example_get, get_user, get_new_user_data
-from app.models import User, Song, Album, Artist
+from app.models import User, Song, Album, Artist, UserToArtist, UserToSong, UserToAlbum
 
 SCOPE = "user-top-read user-read-email playlist-modify-public"
 

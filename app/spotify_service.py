@@ -5,6 +5,32 @@ from flask_login  import current_user
 from  app import db
 from app.models import Album, Artist, Song, ArtistToSong, User, UserToAlbum, UserToArtist, UserToSong
 
+def mfArtists_get():
+    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return redirect(url_for('index'))
+
+    sp = spotipy.Spotify(auth_manager=auth_manager)
+
+    myList = []
+    results = sp.current_user_top_tracks(limit=5, time_range="long_term")
+
+    for idx, item in enumerate(results['items']):
+        thisSong = {
+            'name': item['name'],
+            'img': item['album']['images'][2]['url'],
+        }
+        artists = []
+        for artist in item['artists']:
+            artists.append(artist['name'])
+        thisSong['artists'] = artists
+        myList.append(thisSong)
+
+    return myList
+
+
 def example_get():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
