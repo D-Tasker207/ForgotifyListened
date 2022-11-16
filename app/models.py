@@ -5,9 +5,9 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), index=True)
     last_pulled = db.Column(db.DateTime)
-    forgotten_songs = db.relationship("UserToSong", backref='user', lazy='dynamic')
-    forgotten_artists = db.relationship("UserToArtist", backref='user', lazy='dynamic')
-    forgotten_albums = db.relationship("UserToAlbum", backref='user', lazy='dynamic')
+    songs = db.relationship("UserToSong", backref='user', lazy='dynamic')
+    artists = db.relationship("UserToArtist", backref='user', lazy='dynamic')
+    albums = db.relationship("UserToAlbum", backref='user', lazy='dynamic')
 
 
 @login.user_loader
