@@ -5,32 +5,6 @@ from flask_login  import current_user
 from  app import db
 from app.models import Album, Artist, Song, ArtistToSong, User, UserToAlbum, UserToArtist, UserToSong
 
-def mfArtists_get():
-    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
-    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
-
-    if not auth_manager.validate_token(cache_handler.get_cached_token()):
-        return redirect(url_for('index'))
-
-    sp = spotipy.Spotify(auth_manager=auth_manager)
-
-    myList = []
-    results = sp.current_user_top_tracks(limit=5, time_range="long_term")
-
-    for idx, item in enumerate(results['items']):
-        thisSong = {
-            'name': item['name'],
-            'img': item['album']['images'][2]['url'],
-        }
-        artists = []
-        for artist in item['artists']:
-            artists.append(artist['name'])
-        thisSong['artists'] = artists
-        myList.append(thisSong)
-
-    return myList
-
-
 def example_get():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
@@ -80,8 +54,12 @@ def get_new_user_data():
 
 #this is not a good name for the function but idk what a a better name would be. 
 # it creates the links between the user and the music stuff for the mystuff pages
-def create_user_connections():
-    pass
+def create_user_links():
+    user_data = get_new_user_data()
+
+    add_user_long_term_data(user_data[3])
+    add_user_med_term_data(user_data[2])
+    add_user_forgotten_data(user_data)
 
 def get_user_current_tracks(time_range):
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
@@ -192,4 +170,78 @@ def add_songs_to_db(songs_list):
                 )
                 db.session.add(new_artist_to_song)
 
+    db.session.commit()
+
+#good god theres a lot of loops here
+def add_user_forgotten_data(user_data):
+    data_type = [1,0,0]
+    long_term_data = user_data[2]
+    med_term_data = user_data[1]
+    short_term_data = user_data[0]
+
+    #songs
+    for i in range(0, long_term_data[0].length()):
+        if ((long_term_data[0][i] in med_term_data[0]) or (long_term_data[0][i] in short_term_data[0])):
+            long_term_data[0].remove(i)
+
+    #artist
+    for i in range(0, long_term_data[1].length()):
+        if ((long_term_data[1][i] in med_term_data[1]) or (long_term_data[1][i] in short_term_data[1])):
+            long_term_data[1].remove(i)
+
+    #album
+    for i in range(0, long_term_data[2].length()):
+        if ((long_term_data[2][i] in med_term_data[2]) or (long_term_data[2][i] in short_term_data[2])):
+            long_term_data[2].remove(i)
+    
+    add_user_song_links(long_term_data[0], data_type)
+    add_user_artist_links(long_term_data[1], data_type)
+    add_user_album_links(long_term_data[2], data_type)
+    
+def add_user_long_term_data(long_term_data):
+    data_type = [0,1,0]
+    add_user_song_links(long_term_data[0], data_type)
+    add_user_artist_links(long_term_data[1], data_type)
+    add_user_album_links(long_term_data[2], data_type)
+
+def add_user_med_term_data(med_term_data):
+    data_type = [0,0,1]
+    add_user_song_links(med_term_data[0], data_type)
+    add_user_artist_links(med_term_data[1], data_type)
+    add_user_album_links(med_term_data[2], data_type)
+
+def add_user_song_links(song_list, data_type):
+    u2s = []
+    for song in song_list:
+        u2s.append(UserToSong(
+            user_id = current_user.id, 
+            song_id = song.id, 
+            forgotten=data_type[0], 
+            long_term=data_type[1], 
+            med_term=data_type[2]))
+    db.session.add_all(u2s)
+    db.session.commit()
+
+def add_user_artist_links(artist_list, data_type):
+    u2ar = []
+    for artist in artist_list:
+        u2ar.append(UserToArtist(
+            user_id = current_user.id,
+            artist_id = artist.id, 
+            forgotten=data_type[0], 
+            long_term=data_type[1],
+            med_term=data_type[2]))
+    db.session.add_all(u2ar)
+    db.session.commit()
+
+def add_user_album_links(album_list, data_type):
+    u2al = []
+    for album in album_list:
+        u2al.append(UserToAlbum(
+            user_id= current_user.id, 
+            album_id= album.id, 
+            forgotten=data_type[0], 
+            long_term=data_type[1], 
+            med_term=data_type[2]))
+    db.session.add_all(u2al)
     db.session.commit()
