@@ -5,16 +5,18 @@ from flask import render_template, redirect, url_for, session, request
 from flask_login import current_user, login_user, logout_user, login_required
 from app.spotify_service import example_get, get_user, get_new_user_data
 from app.models import User, Song, Album, Artist, UserToArtist, UserToSong, UserToAlbum
+from app.spotify_service import example_get, get_user, get_new_user_data, create_user_links, update_user_data
 
 SCOPE = "user-top-read user-read-email playlist-modify-public"
 
-# function to call the data refresh functions when 90 days have passed since last pull
+# #function to call the data refresh functions when 90 days have passed since last pull
 # @app.before_request
 # def before_request():
-#     today = datetime.today()
-#     if current_user.last_pulled < today - timedelta(days=90):
-#         user_data = get_new_user_data()
-#         current_user.last_pulled = datetime.now()
+#     if(current_user.is_authenticated):
+#         today = datetime.today()
+#         if User.query.filter_by(id=current_user.get_id()).first().last_pulled < today - timedelta(days=90):
+#             redirect('/update_user_data')
+
 
 
 @app.route('/')
@@ -140,7 +142,7 @@ def callback():
         login_user(user)
     else:
         login_user(user)
-    return redirect('/')
+    return redirect('/new_user_dbpull')
 
 
 @app.route('/logout')
@@ -154,6 +156,15 @@ def logout():
 def get_email():
     return get_user()
 
+@app.route('/update_user_data')
+def update_user_data():
+    update_user_data()
+
+@app.route('/new_user_dbpull')
+def new_user_dbpull():
+    user_data = get_new_user_data()
+    create_user_links(user_data)
+    return redirect(url_for('index'))
 
 @app.route('/testdbpull')
 @login_required
