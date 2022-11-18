@@ -9,7 +9,7 @@
 <body>
     <a href="{{ url_for('mystuffsongs') }}">My Stuff Songs</a>
     <h2>My Most Forgotten Artists:</h2>
-    <h2>{{ UserToArtist.forgotten }}</h2>
+    <h2>{{ User.artist }}</h2>
     <a href="{{ url_for('mostforgottenartists') }}">Most Forgotten Artists</a>
     <h2>Artists From a Year Ago:</h2>
     <h2>{{ User.artist }}</h2>
