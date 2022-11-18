@@ -1,8 +1,8 @@
 import spotipy
-from spotipy.oauth2 import SpotifyOAuth
 from flask import session, redirect, url_for
 from flask_login  import current_user
 from  app import db
+from datetime import datetime
 from app.models import Album, Artist, Song, ArtistToSong, User, UserToAlbum, UserToArtist, UserToSong
 
 def example_get():
@@ -54,12 +54,19 @@ def get_new_user_data():
 
 #this is not a good name for the function but idk what a a better name would be. 
 # it creates the links between the user and the music stuff for the mystuff pages
-def create_user_links():
-    user_data = get_new_user_data()
+def create_user_links(user_data):
 
-    add_user_long_term_data(user_data[3])
-    add_user_med_term_data(user_data[2])
-    add_user_forgotten_data(user_data)
+    add_user_long_term_data(user_data[2])
+    add_user_med_term_data(user_data[1])
+    #add_user_forgotten_data(user_data)
+
+
+    #User.query.filter_by(id=current_user.get_id()).first().last_pulled = datetime.now() 
+    u = User.query.filter_by(id=current_user.get_id()).first()
+    u.last_pulled = datetime.now()
+    db.session.add(u)
+    db.session.commit()
+
 
 def get_user_current_tracks(time_range):
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
@@ -180,17 +187,17 @@ def add_user_forgotten_data(user_data):
     short_term_data = user_data[0]
 
     #songs
-    for i in range(0, long_term_data[0].length()):
+    for i in range(0, len(long_term_data[0])):
         if ((long_term_data[0][i] in med_term_data[0]) or (long_term_data[0][i] in short_term_data[0])):
             long_term_data[0].remove(i)
 
     #artist
-    for i in range(0, long_term_data[1].length()):
+    for i in range(0, len(long_term_data[1])):
         if ((long_term_data[1][i] in med_term_data[1]) or (long_term_data[1][i] in short_term_data[1])):
             long_term_data[1].remove(i)
 
     #album
-    for i in range(0, long_term_data[2].length()):
+    for i in range(0, len(long_term_data[2])):
         if ((long_term_data[2][i] in med_term_data[2]) or (long_term_data[2][i] in short_term_data[2])):
             long_term_data[2].remove(i)
     
@@ -215,7 +222,7 @@ def add_user_song_links(song_list, data_type):
     for song in song_list:
         u2s.append(UserToSong(
             user_id = current_user.id, 
-            song_id = song.id, 
+            song_id = song['id'], 
             forgotten=data_type[0], 
             long_term=data_type[1], 
             med_term=data_type[2]))
@@ -227,7 +234,7 @@ def add_user_artist_links(artist_list, data_type):
     for artist in artist_list:
         u2ar.append(UserToArtist(
             user_id = current_user.id,
-            artist_id = artist.id, 
+            artist_id = artist['id'], 
             forgotten=data_type[0], 
             long_term=data_type[1],
             med_term=data_type[2]))
@@ -239,9 +246,22 @@ def add_user_album_links(album_list, data_type):
     for album in album_list:
         u2al.append(UserToAlbum(
             user_id= current_user.id, 
-            album_id= album.id, 
+            album_id= album['id'], 
             forgotten=data_type[0], 
             long_term=data_type[1], 
             med_term=data_type[2]))
     db.session.add_all(u2al)
+    db.session.commit()
+
+def update_user_data():
+    delete_current_user_links()
+    user_data = get_new_user_data()
+    create_user_links(user_data)
+    User.query.filter_by(id=current_user.get_id()).first().last_pulled = datetime.now() 
+
+def delete_current_user_links():
+    #delete all links in the user join tables
+    UserToAlbum.filter_by(user_id=current_user.id).delete()
+    UserToArtist.filter_by(user_id=current_user.id).delete()
+    UserToSong.filter_by(user_id=current_user.id).delete()
     db.session.commit()

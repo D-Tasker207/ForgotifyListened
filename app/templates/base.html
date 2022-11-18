@@ -1,3 +1,42 @@
+{%  extends 'bootstrap/base.html' %}
+
+{% block title %}
+    {{ title }} Forgotify listened
+{% endblock %}
+
+{% block navbar %}
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="{{ url_for('index') }}">Forgotify Listened: </a>
+                {% if current_user.is_anonymous %}
+                <a href="{{  url_for('recommended') }}">Recommended</a>
+                <a href="{{ url_for('login') }}">Login</a>
+                {% else %}
+                <a href="{{ url_for('mystuffsongs') }}">My Stuff</a>
+                <a href="{{  url_for('recommended') }}">Recommended</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-info" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {# application content needs to be provided in the app_content block #}
+        {% block app_content %}{% endblock %}
+    </div>
+{% endblock %}
+
 <html>
     <style>
         p.footer{
@@ -9,29 +48,6 @@
     <head>
     </head>
     <body>
-        <div>
-            <a href="{{ url_for('index') }}"><b>Forgotify Listened:</b></a>
-            {% if current_user.is_anonymous %}
-            <a href="{{  url_for('recommended') }}">Recommended</a>
-            <a href="{{ url_for('login') }}">Login</a>
-            {% else %}
-            <a href="{{ url_for('mystuffsongs') }}">My Stuff</a>
-            <a href="{{  url_for('recommended') }}">Recommended</a>
-            <a href="{{ url_for('logout') }}">Logout</a>
-            {% endif %}
-
-        </div>
-        <hr>
-        {%  with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul>
-            {%  for message in messages %}
-            <li>{{  message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% endwith %}
-        {% block content %}{% endblock %}
         <p class=footer valine="bottom">
             <a href="{{ url_for('contact') }}">Contact Us</a>
         </p>
