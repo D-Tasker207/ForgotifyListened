@@ -3,8 +3,13 @@ from datetime import timedelta, datetime
 from app import app, db
 from flask import render_template, redirect, url_for, session, request
 from flask_login import current_user, login_user, logout_user, login_required
+<<<<<<< HEAD
 from app.spotify_service import example_get, get_user, get_new_user_data, create_user_links, update_user_data
 from app.models import User, Song, Album, Artist
+=======
+from app.spotify_service import example_get, get_user, get_new_user_data
+from app.models import User, Song, Album, Artist, UserToArtist, UserToSong, UserToAlbum
+>>>>>>> 23ef72283b3d374afbdc13753cfa4292208b0c12
 
 SCOPE = "user-top-read user-read-email playlist-modify-public"
 
@@ -58,7 +63,7 @@ def album(name):
 @app.route('/mystuff/artists')
 @login_required
 def mystuffartists():
-    return render_template('myStuffArtists.html')
+    return render_template('myStuffArtists.html', User=User, UserToArtist=UserToArtist)
 
 
 @app.route('/most_forgotten_artists')
@@ -82,7 +87,7 @@ def sixmonthsartists():
 @app.route('/mystuff/songs')
 @login_required
 def mystuffsongs():
-    return render_template('myStuffSongs.html')
+    return render_template('myStuffSongs.html', User=User, UserToSong=UserToSong)
 
 
 @app.route('/most_forgotten_songs')

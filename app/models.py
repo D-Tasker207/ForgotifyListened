@@ -9,9 +9,11 @@ class User(UserMixin, db.Model):
     artists = db.relationship("UserToArtist", backref='user', lazy='dynamic')
     albums = db.relationship("UserToAlbum", backref='user', lazy='dynamic')
 
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
 
 class Album(db.Model):
     id = db.Column(db.String(64), primary_key=True)
@@ -23,6 +25,7 @@ class Album(db.Model):
     artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'))
     songs = db.relationship("Song", backref="album", lazy='dynamic')
 
+
 class Artist(db.Model):
     id = db.Column(db.String(64), primary_key=True)
     name = db.Column(db.String(64), index=True)
@@ -31,6 +34,7 @@ class Artist(db.Model):
     external_url = db.Column(db.String(64))
     uri = db.Column(db.String(64))
     artist2song = db.relationship('ArtistToSong', backref='artist', lazy='dynamic')
+
 
 class Song(db.Model):
     id = db.Column(db.String(64), primary_key=True)
@@ -41,10 +45,12 @@ class Song(db.Model):
     album_id = db.Column(db.Integer, db.ForeignKey('album.id'))
     artist2song = db.relationship('ArtistToSong', backref='song', lazy='dynamic')
 
+
 class ArtistToSong(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     artist_id = db.Column(db.String(64), db.ForeignKey('artist.id'), index=True)
     song_id = db.Column(db.String(64), db.ForeignKey('song.id'), index=True)
+
 
 class UserToSong(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -66,6 +72,7 @@ class UserToAlbum(db.Model):
     forgotten = db.Column(db.Integer, index=True)
     long_term = db.Column(db.Integer,  index=True)
     med_term = db.Column(db.Integer, index=True)
+
 
 class UserToArtist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
