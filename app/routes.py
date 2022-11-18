@@ -33,6 +33,11 @@ def spotipytest():
 @app.route('/artist/<name>')
 def artist(name):
     return "Hello, %s!" % name
+    # artist_name = Artist.query.filter_by(name=name).first()
+    # # if artist is None:
+    # #     flash('Artist Not Found')
+    # #     return redirect(url_for('index'))
+    # return render_template('artist.html', Artist=artist_name)
 
 
 @app.route('/artistlist')
@@ -43,6 +48,11 @@ def artistlist():
 @app.route('/song/<name>')
 def song(name):
     return render_template('song.html')
+    # song_name = Song.query.filter_by(name=name).first()
+    # # if song is None:
+    # #     flash('Song Not Found')
+    # #     return redirect(url_for('index'))
+    # return render_template('artist.html', Song=song_name)
 
 
 @app.route('/songlist')
