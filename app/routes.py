@@ -57,7 +57,7 @@ def album(name):
 @app.route('/mystuff/artists')
 @login_required
 def mystuffartists():
-    return render_template('myStuffArtists.html', User=User)
+    return render_template('myStuffArtists.html', User=User, UserToArtist=UserToArtist)
 
 
 @app.route('/most_forgotten_artists')
@@ -81,7 +81,7 @@ def sixmonthsartists():
 @app.route('/mystuff/songs')
 @login_required
 def mystuffsongs():
-    return render_template('myStuffSongs.html', User=User)
+    return render_template('myStuffSongs.html', User=User, UserToSong=UserToSong)
 
 
 @app.route('/most_forgotten_songs')
