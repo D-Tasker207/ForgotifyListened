@@ -33,7 +33,9 @@ def spotipytest():
 
 @app.route('/artist/<name>')
 def artist(name):
-    return "Hello, %s!" % name
+    a_name = Artist.query.filter_by(name=name).first()
+    return render_template('artist.html', artist=Artist, name=name)
+    # return "Hello, %s!" % name
 
 
 @app.route('/artistlist')
@@ -43,7 +45,9 @@ def artistlist():
 
 @app.route('/song/<name>')
 def song(name):
-    return "Hello, %s!" % name
+    a_song = Song.query.filter_by(name=name).first()
+    return render_template('song.html', song=Song, name=name)
+    #return "Hello, %s!" % name
 
 
 @app.route('/songlist')

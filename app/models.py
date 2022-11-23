@@ -1,6 +1,7 @@
 from app import db, login
 from flask_login import UserMixin 
 
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), index=True)
@@ -24,6 +25,8 @@ class Album(db.Model):
     uri = db.Column(db.String(64))
     artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'))
     songs = db.relationship("Song", backref="album", lazy='dynamic')
+    song2album = db.relationship('AlbumToSong', backref='album', lazy='dynamic')
+
 
 
 class Artist(db.Model):
@@ -44,6 +47,7 @@ class Song(db.Model):
     uri = db.Column(db.String(64))
     album_id = db.Column(db.Integer, db.ForeignKey('album.id'))
     artist2song = db.relationship('ArtistToSong', backref='song', lazy='dynamic')
+    song2album = db.relationship('AlbumToSong', backref='song', lazy='dynamic')
 
 
 class ArtistToSong(db.Model):
@@ -51,6 +55,10 @@ class ArtistToSong(db.Model):
     artist_id = db.Column(db.String(64), db.ForeignKey('artist.id'), index=True)
     song_id = db.Column(db.String(64), db.ForeignKey('song.id'), index=True)
 
+class AlbumToSong(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    album_id = db.Column(db.String(64), db.ForeignKey('album.id'), index=True)
+    song_id = db.Column(db.String(64), db.ForeignKey('song.id'), index=True)
 
 class UserToSong(db.Model):
     id = db.Column(db.Integer, primary_key=True)
