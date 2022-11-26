@@ -57,7 +57,9 @@ def songlist():
 
 @app.route('/album/<name>')
 def album(name):
-    return "Hello, %s!" % name
+    a_song = Album.query.filter_by(name=name).first()
+    return render_template('album.html', album=Album, name=name)
+    # return "Hello, %s!" % name
 
 
 @app.route('/mystuff/artists')
@@ -69,43 +71,82 @@ def mystuffartists():
 @app.route('/most_forgotten_artists')
 @login_required
 def mostforgottenartists():
-    return render_template('mostForgottenArtists.html')
+    return render_template('mostForgottenArtists.html', User=User)
 
 
 @app.route('/one_year_artists')
 @login_required
 def oneyearartists():
-    return render_template('yearAgoArtists.html')
+    return render_template('yearAgoArtists.html', User=User)
 
 
 @app.route('/six_months_artists')
 @login_required
 def sixmonthsartists():
-    return render_template('sixMonthsArtists.html')
+    return render_template('sixMonthsArtists.html', User=User)
 
 
 @app.route('/mystuff/songs')
 @login_required
 def mystuffsongs():
-    return render_template('myStuffSongs.html', User=User, UserToSong=UserToSong)
+    forgotten = []
+    forgotten_img = []
+    long_term = []
+    long_term_img = []
+    med_term = []
+    med_term_img = []
+    u = User.query.filter_by(id=current_user.id).first()
+    song_ids = [x.song_id for x in u.songs]
+    album_ids = [x.album_id for x in u.albums]
+    song_names = [Song.query.filter_by(id=x).first() for x in song_ids]
+    images = [Album.query.filter_by(id=x).first() for x in album_ids]
+
+    # print(album_ids)
+    # print(images)
+
+    for i in range(len(song_names)):
+        u2s = UserToSong.query.filter_by(song_id=song_names[i].id).first()
+        # u2a = UserToAlbum.query.filter_by(album_id=images[i].id).first()
+        if u2s.forgotten > 0:
+            forgotten.append(song_names[i])
+            forgotten_img.append(images[i])
+        elif u2s.long_term > 0:
+            long_term.append(song_names[i])
+            long_term_img.append(images[i])
+
+        else:
+            med_term.append(song_names[i])
+            med_term_img.append(images[i])
+
+    # print(forgotten_img)
+    # print(long_term_img)
+    # print(med_term_img)
+    # print(song_names)
+
+    # if len(forgotten) == 0:
+    # elif len(long_term) == 0 :
+    # elif len(med_term) == 0:
+
+    return render_template('myStuffSongs.html', User=User, forgotten=forgotten, long_term=long_term, med_term=med_term,
+                           forgotten_img=forgotten_img, long_term_img=long_term_img, med_term_img=med_term_img)
 
 
 @app.route('/most_forgotten_songs')
 @login_required
 def mostforgottensongs():
-    return render_template('mostForgottenSongs.html')
+    return render_template('mostForgottenSongs.html', User=User)
 
 
 @app.route('/one_year_songs')
 @login_required
 def oneyearsongs():
-    return render_template('yearAgoSongs.html')
+    return render_template('yearAgoSongs.html', User=User)
 
 
 @app.route('/six_months_songs')
 @login_required
 def sixmonthssongs():
-    return render_template('sixMonthsSongs.html')
+    return render_template('sixMonthsSongs.html', User=User)
 
 
 @app.route('/recommended')
@@ -128,6 +169,7 @@ def login():
                                                show_dialog=True)
 
     auth_url = auth_manager.get_authorize_url()
+    # print(get_user())
     return redirect(auth_url)
 
 @app.route('/callback')
