@@ -49,7 +49,6 @@ def get_new_user_data():
         add_artists_to_db(data[1])
         add_albums_to_db(data[2])
         
-
     return user_data
 
 #this is not a good name for the function but idk what a a better name would be. 
@@ -58,7 +57,7 @@ def create_user_links(user_data):
 
     add_user_long_term_data(user_data[2])
     add_user_med_term_data(user_data[1])
-    #add_user_forgotten_data(user_data)
+    add_user_forgotten_data(user_data)
 
 
     #User.query.filter_by(id=current_user.get_id()).first().last_pulled = datetime.now() 
@@ -187,18 +186,18 @@ def add_user_forgotten_data(user_data):
     short_term_data = user_data[0]
 
     #songs
-    for i in range(0, len(long_term_data[0])):
-        if ((long_term_data[0][i] in med_term_data[0]) or (long_term_data[0][i] in short_term_data[0])):
+    for i in long_term_data[0]:
+        if ((i in med_term_data[0]) or (i in short_term_data[0])):
             long_term_data[0].remove(i)
 
     #artist
-    for i in range(0, len(long_term_data[1])):
-        if ((long_term_data[1][i] in med_term_data[1]) or (long_term_data[1][i] in short_term_data[1])):
+    for i in long_term_data[1]:
+        if ((i in med_term_data[1]) or (i in short_term_data[1])):
             long_term_data[1].remove(i)
 
     #album
-    for i in range(0, len(long_term_data[2])):
-        if ((long_term_data[2][i] in med_term_data[2]) or (long_term_data[2][i] in short_term_data[2])):
+    for i in long_term_data[2]:
+        if ((i in med_term_data[2]) or (i in short_term_data[2])):
             long_term_data[2].remove(i)
     
     add_user_song_links(long_term_data[0], data_type)

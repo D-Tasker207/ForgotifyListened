@@ -14,7 +14,7 @@ SCOPE = "user-top-read user-read-email playlist-modify-public"
 #     if(current_user.is_authenticated):
 #         today = datetime.today()
 #         if User.query.filter_by(id=current_user.get_id()).first().last_pulled < today - timedelta(days=90):
-#             redirect('/update_user_data')
+#             redirect('update_user_data')
     
 
 
