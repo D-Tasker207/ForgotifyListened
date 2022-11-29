@@ -7,17 +7,17 @@ from rq import get_current_job
 from app.models import Album, Artist, Song, ArtistToSong, User, UserToAlbum, UserToArtist, UserToSong, Task
 
 
-def _set_task_progress(progress):
-    job = get_current_job()
-    if job:
-        job.meta['progress'] = progress
-        job.save_meta()
+# def _set_task_progress(progress):
+#     job = get_current_job()
+#     if job:
+#         job.meta['progress'] = progress
+#         job.save_meta()
 
-        task = Task.query.get(job.get_id())
+#         task = Task.query.get(job.get_id())
         
-        if progress >= 100:
-            task.complete = True
-        db.session.commit()
+#         if progress >= 100:
+#             task.complete = True
+#         db.session.commit()
 
 def example_get():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
@@ -68,14 +68,14 @@ def get_new_user_data():
 #this is not a good name for the function but idk what a a better name would be. 
 # it creates the links between the user and the music stuff for the mystuff pages
 def create_user_links():
-    _set_task_progress(0)
+    # _set_task_progress(0)
     user_data = get_new_user_data()
-    _set_task_progress(25)
+    # _set_task_progress(25)
 
     add_user_long_term_data(user_data[2])
-    _set_task_progress(50)
+    # _set_task_progress(50)
     add_user_med_term_data(user_data[1])
-    _set_task_progress(75)
+    # _set_task_progress(75)
     add_user_forgotten_data(user_data)
 
 
@@ -84,7 +84,7 @@ def create_user_links():
     u.last_pulled = datetime.now()
     db.session.add(u)
     db.session.commit()
-    _set_task_progress(100)
+    # _set_task_progress(100)
 
 
 def get_user_current_tracks(time_range):
