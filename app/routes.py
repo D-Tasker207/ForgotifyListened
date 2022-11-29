@@ -13,7 +13,8 @@ SCOPE = "user-top-read user-read-email playlist-modify-public"
 # def before_request():
 #     if(current_user.is_authenticated):
 #         today = datetime.today()
-#         if User.query.filter_by(id=current_user.get_id()).first().last_pulled < today - timedelta(days=90):
+#         user = User.query.filter_by(id=current_user.get_id()).first()
+#         if user.last_pulled < today - timedelta(days=90):
 #             redirect('update_user_data')
     
 
@@ -161,16 +162,14 @@ def update_user_data():
 
 @app.route('/new_user_dbpull')
 def new_user_dbpull():
-    if(current_user.get_task_in_progress('create_user_links')):
-        flash(_('Account scraping is in progress'))
-    else:
-        current_user.launch_task('create_user_links', "Gathering account info")
-        db.session.commit()
+    # if(current_user.get_task_in_progress('create_user_links')):
+    #     flash('Account scraping is in progress')
+    # else:
+    #     current_user.launch_task('create_user_links', "Gathering account info")
+    #     db.session.commit()
 
-    return redirect(url_for('index'))
-
-# @app.route('/loading')
-# def loading():
+    create_user_links()
+    return redirect(url_for('mystuff/songs'))
 
 
 @app.route('/testdbpull')
