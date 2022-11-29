@@ -1,7 +1,7 @@
 import spotipy
 from datetime import timedelta, datetime
 from app import app, db
-from flask import render_template, redirect, url_for, session, request
+from flask import render_template, redirect, url_for, session, request, flash
 from flask_login import current_user, login_user, logout_user, login_required
 from app.spotify_service import example_get, get_user, get_new_user_data
 from app.models import User, Song, Album, Artist, UserToArtist, UserToSong, UserToAlbum, ArtistToSong
@@ -14,9 +14,9 @@ SCOPE = "user-top-read user-read-email playlist-modify-public"
 # def before_request():
 #     if(current_user.is_authenticated):
 #         today = datetime.today()
-#         if User.query.filter_by(id=current_user.get_id()).first().last_pulled < today - timedelta(days=90):
-#             redirect('/update_user_data')
-
+#         user = User.query.filter_by(id=current_user.get_id()).first()
+#         if user.last_pulled < today - timedelta(days=90):
+#             redirect('update_user_data')
 
 
 @app.route('/')
@@ -326,9 +326,15 @@ def update_user_data():
 
 @app.route('/new_user_dbpull')
 def new_user_dbpull():
-    user_data = get_new_user_data()
-    create_user_links(user_data)
-    return redirect(url_for('index'))
+    # if(current_user.get_task_in_progress('create_user_links')):
+    #     flash('Account scraping is in progress')
+    # else:
+    #     current_user.launch_task('create_user_links', "Gathering account info")
+    #     db.session.commit()
+
+    create_user_links()
+    return redirect(url_for('mystuff/songs'))
+
 
 @app.route('/testdbpull')
 @login_required

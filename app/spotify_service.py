@@ -3,7 +3,21 @@ from flask import session, redirect, url_for
 from flask_login  import current_user
 from  app import db
 from datetime import datetime
-from app.models import Album, Artist, Song, ArtistToSong, User, UserToAlbum, UserToArtist, UserToSong
+from rq import get_current_job
+from app.models import Album, Artist, Song, ArtistToSong, User, UserToAlbum, UserToArtist, UserToSong, Task
+
+
+# def _set_task_progress(progress):
+#     job = get_current_job()
+#     if job:
+#         job.meta['progress'] = progress
+#         job.save_meta()
+
+#         task = Task.query.get(job.get_id())
+        
+#         if progress >= 100:
+#             task.complete = True
+#         db.session.commit()
 
 def example_get():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
@@ -49,16 +63,20 @@ def get_new_user_data():
         add_artists_to_db(data[1])
         add_albums_to_db(data[2])
         
-
     return user_data
 
 #this is not a good name for the function but idk what a a better name would be. 
 # it creates the links between the user and the music stuff for the mystuff pages
-def create_user_links(user_data):
+def create_user_links():
+    # _set_task_progress(0)
+    user_data = get_new_user_data()
+    # _set_task_progress(25)
 
     add_user_long_term_data(user_data[2])
+    # _set_task_progress(50)
     add_user_med_term_data(user_data[1])
-    #add_user_forgotten_data(user_data)
+    # _set_task_progress(75)
+    add_user_forgotten_data(user_data)
 
 
     #User.query.filter_by(id=current_user.get_id()).first().last_pulled = datetime.now() 
@@ -66,6 +84,7 @@ def create_user_links(user_data):
     u.last_pulled = datetime.now()
     db.session.add(u)
     db.session.commit()
+    # _set_task_progress(100)
 
 
 def get_user_current_tracks(time_range):
@@ -187,18 +206,18 @@ def add_user_forgotten_data(user_data):
     short_term_data = user_data[0]
 
     #songs
-    for i in range(0, len(long_term_data[0])):
-        if ((long_term_data[0][i] in med_term_data[0]) or (long_term_data[0][i] in short_term_data[0])):
+    for i in long_term_data[0]:
+        if ((i in med_term_data[0]) or (i in short_term_data[0])):
             long_term_data[0].remove(i)
 
     #artist
-    for i in range(0, len(long_term_data[1])):
-        if ((long_term_data[1][i] in med_term_data[1]) or (long_term_data[1][i] in short_term_data[1])):
+    for i in long_term_data[1]:
+        if ((i in med_term_data[1]) or (i in short_term_data[1])):
             long_term_data[1].remove(i)
 
     #album
-    for i in range(0, len(long_term_data[2])):
-        if ((long_term_data[2][i] in med_term_data[2]) or (long_term_data[2][i] in short_term_data[2])):
+    for i in long_term_data[2]:
+        if ((i in med_term_data[2]) or (i in short_term_data[2])):
             long_term_data[2].remove(i)
     
     add_user_song_links(long_term_data[0], data_type)
