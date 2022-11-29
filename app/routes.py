@@ -65,7 +65,34 @@ def album(name):
 @app.route('/mystuff/artists')
 @login_required
 def mystuffartists():
-    return render_template('myStuffArtists.html', User=User, UserToArtist=UserToArtist)
+    forgotten = []
+    forgotten_img = []
+    long_term = []
+    long_term_img = []
+    med_term = []
+    med_term_img = []
+    images = []
+    u = User.query.filter_by(id=current_user.id).first()
+    artist_ids = [x.artist_id for x in u.artists]
+    artist_names = [Artist.query.filter_by(id=x).first() for x in artist_ids]
+
+    for i in range(len(artist_names)):
+        images.append(artist_names[i].img)
+
+    for i in range(len(artist_names)):
+        u2a = UserToArtist.query.filter_by(artist_id=artist_names[i].id).first()
+        if u2a.forgotten > 0:
+            forgotten.append(artist_names[i])
+            forgotten_img.append(images[i])
+        elif u2a.long_term > 0:
+            long_term.append(artist_names[i])
+            long_term_img.append(images[i])
+        else:
+            med_term.append(artist_names[i])
+            med_term_img.append(images[i])
+
+    return render_template('myStuffArtists.html', User=User, forgotten=forgotten, long_term=long_term, med_term=med_term,
+                           forgotten_img=forgotten_img, long_term_img=long_term_img, med_term_img=med_term_img)
 
 
 @app.route('/most_forgotten_artists')
@@ -101,12 +128,8 @@ def mystuffsongs():
     song_names = [Song.query.filter_by(id=x).first() for x in song_ids]
     images = [Album.query.filter_by(id=x).first() for x in album_ids]
 
-    # print(album_ids)
-    # print(images)
-
     for i in range(len(song_names)):
         u2s = UserToSong.query.filter_by(song_id=song_names[i].id).first()
-        # u2a = UserToAlbum.query.filter_by(album_id=images[i].id).first()
         if u2s.forgotten > 0:
             forgotten.append(song_names[i])
             forgotten_img.append(images[i])
@@ -117,15 +140,6 @@ def mystuffsongs():
         else:
             med_term.append(song_names[i])
             med_term_img.append(images[i])
-
-    # print(forgotten_img)
-    # print(long_term_img)
-    # print(med_term_img)
-    # print(song_names)
-
-    # if len(forgotten) == 0:
-    # elif len(long_term) == 0 :
-    # elif len(med_term) == 0:
 
     return render_template('myStuffSongs.html', User=User, forgotten=forgotten, long_term=long_term, med_term=med_term,
                            forgotten_img=forgotten_img, long_term_img=long_term_img, med_term_img=med_term_img)

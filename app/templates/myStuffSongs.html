@@ -19,7 +19,7 @@
     <h2>Songs From a Year Ago:</h2>
     {% if long_term | length > 0 %}
         {% for i in range(0, 5) %}
-            <img src={{ long_term_img[i].img }} style="width:100px;height:100px;"><br>
+            <img src={{long_term_img[i].img}} style="width:100px;height:100px;"><br>
             <a href="{{ url_for('song', name=long_term[i].name) }}">{{ long_term[i].name }}</a><br>
         {% endfor %}
     {% endif %}
@@ -27,7 +27,7 @@
     <h2>Songs From 6 Months Ago:</h2>
     {% if med_term | length > 0 %}
         {% for i in range(0, 5) %}
-            <img src={{ med_term_img[i].img}} style="width:100px;height:100px;"><br>
+            <img src={{med_term_img[i].img}} style="width:100px;height:100px;"><br>
             <a href="{{ url_for('song', name=med_term[i].name) }}">{{ med_term[i].name }}</a><br>
         {% endfor %}
     {% endif %}

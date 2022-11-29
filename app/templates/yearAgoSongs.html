@@ -8,6 +8,12 @@
 </head>
 <body>
     <h2>My Forgotten Songs From a Year Ago:</h2>
+    {% if long_term | length > 0 %}
+        {% for i in long_term %}
+            <img src={{long_term_img[i].img}} style="width:100px;height:100px;"><br>
+            <a href="{{ url_for('song', name=long_term[i].name) }}">{{ long_term[i].name }}</a><br>
+        {% endfor %}
+    {% endif %}
 </body>
 </html>
 {% endblock %}

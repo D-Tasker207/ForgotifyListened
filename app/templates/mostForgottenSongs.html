@@ -8,15 +8,12 @@
 </head>
 <body>
     <h2>My Most Forgotten Songs:</h2>
-    <!--        <h2>{{ User.songs }}</h2>-->
-        <a href="{{ url_for('song', name=User.songs) }}">{{ User.songs }}</a><br>
-        <h2>{{ User.songs }}</h2>
-<!--    <h2>{{ User.songs }}</h2>-->
-<!--    {% for song in songs %}-->
-<!--        <h2>{{ User.songs }}</h2>-->
-<!--        <a href="{{ url_for('song', name=song.name) }}">{{ song.name }}</a><br>-->
-<!--    {% endfor %}-->
-
+    {% if forgotten | length > 0 %}
+        {% for i in range(len(forgotten)) %}
+            <img src={{forgotten_img[i].img}} style="width:100px;height:100px;"><br>
+            <a href="{{ url_for('song', name=forgotten[i].name) }}">{{ forgotten[i].name }}</a><br>
+        {% endfor %}
+    {% endif %}
 </body>
 </html>
 {% endblock %}

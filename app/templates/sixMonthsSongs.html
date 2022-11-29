@@ -8,6 +8,10 @@
 </head>
 <body>
     <h2>My Forgotten Songs From the Past 6 Months:</h2>
+    {% if med_term | length > 0 %}
+        <img src={{med_term_img.img}} style="width:100px;height:100px;"><br>
+        <a href="{{ url_for('song', name=med_term.name) }}">{{ med_term.name }}</a><br>
+    {% endif %}
 </body>
 </html>
 {% endblock %}
