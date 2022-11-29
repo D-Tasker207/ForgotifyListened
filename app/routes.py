@@ -4,7 +4,7 @@ from app import app, db
 from flask import render_template, redirect, url_for, session, request
 from flask_login import current_user, login_user, logout_user, login_required
 from app.spotify_service import example_get, get_user, get_new_user_data
-from app.models import User, Song, Album, Artist, UserToArtist, UserToSong, UserToAlbum
+from app.models import User, Song, Album, Artist, UserToArtist, UserToSong, UserToAlbum, ArtistToSong
 from app.spotify_service import example_get, get_user, get_new_user_data, create_user_links, update_user_data
 
 SCOPE = "user-top-read user-read-email playlist-modify-public"
@@ -33,7 +33,6 @@ def spotipytest():
 
 @app.route('/artist/<name>')
 def artist(name):
-    a_name = Artist.query.filter_by(name=name).first()
     return render_template('artist.html', artist=Artist, name=name)
     # return "Hello, %s!" % name
 
@@ -43,11 +42,18 @@ def artistlist():
     return "Hello, world!"
 
 
+class Artist_to_Song:
+    pass
+
+
 @app.route('/song/<name>')
 def song(name):
-    a_song = Song.query.filter_by(name=name).first()
-    return render_template('song.html', song=Song, name=name)
-    #return "Hello, %s!" % name
+    song_id = Song.query.filter_by(name=name).first()
+    artist_id = [x.artist_id for x in song_id.artist2song]
+    artist = [Artist.query.filter_by(id=x).first().name for x in artist_id]
+
+    return render_template('song.html', Song=Song, name=name, artist=artist, size=len(artist))
+
 
 
 @app.route('/songlist')
@@ -57,7 +63,6 @@ def songlist():
 
 @app.route('/album/<name>')
 def album(name):
-    a_song = Album.query.filter_by(name=name).first()
     return render_template('album.html', album=Album, name=name)
     # return "Hello, %s!" % name
 
