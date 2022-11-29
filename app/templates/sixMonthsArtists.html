@@ -8,6 +8,12 @@
 </head>
 <body>
     <h2>My Forgotten Artists From the Past 6 Months:</h2>
+    {% if med_term | length > 0 %}
+        {% for i in range(0, size) %}
+            <img src={{long_term_img[i]}} style="width:100px;height:100px;"><br>
+            <a href="{{ url_for('artist', name=med_term[i].name) }}">{{ med_term[i].name }}</a><br>
+        {% endfor %}
+    {% endif %}
 </body>
 </html>
 {% endblock %}
