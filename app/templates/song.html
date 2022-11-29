@@ -3,16 +3,16 @@
 {% block content %}
 <html>
 <head>
-    <title>Song</title>
+    <title>{{ name }}</title>
 </head>
 <body>
     <h2>{{ name  }}</h2>
-    <h2>{{ artist }}</h2>
+    {% for i in range(0,size) %}
+        <h2>{{ artist[i] }}</h2>
+    {% endfor %}
     <h2>{{ album }}</h2>
-    <h2>{{ lastListened }}</h2>
-    <li>
         <h2>More by This Artist:</h2>
-    </li>
+
 </body>
 </html>
 {% endblock %}

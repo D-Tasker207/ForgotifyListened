@@ -8,6 +8,12 @@
 </head>
 <body>
     <h2>My Most Forgotten Artists:</h2>
+    {% if forgotten | length > 0 %}
+        {% for i in range(0, size) %}
+            <img src={{forgotten_img[i]}} style="width:100px;height:100px;"><br>
+            <a href="{{ url_for('artist', name=forgotten[i].name) }}">{{ forgotten[i].name }}</a><br>
+        {% endfor %}
+    {% endif %}
 </body>
 </html>
 {% endblock %}

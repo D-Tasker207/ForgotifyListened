@@ -9,13 +9,28 @@
 <body>
     <a href="{{ url_for('mystuffsongs') }}">My Stuff Songs</a>
     <h2>My Most Forgotten Artists:</h2>
-    <h2>{{ User.artist }}</h2>
+    {% if forgotten | length > 0 %}
+        {% for i in range(0, 5) %}
+            <img src={{forgotten_img[i]}} style="width:100px;height:100px;"><br>
+            <a href="{{ url_for('artist', name=forgotten[i].name) }}">{{ forgotten[i].name }}</a><br>
+        {% endfor %}
+    {% endif %}
     <a href="{{ url_for('mostforgottenartists') }}">Most Forgotten Artists</a>
     <h2>Artists From a Year Ago:</h2>
-    <h2>{{ User.artist }}</h2>
+    {% if long_term | length > 0 %}
+        {% for i in range(0, 5) %}
+            <img src={{long_term_img[i]}} style="width:100px;height:100px;"><br>
+            <a href="{{ url_for('artist', name=long_term[i].name) }}">{{ long_term[i].name }}</a><br>
+        {% endfor %}
+    {% endif %}
     <a href="{{ url_for('oneyearartists') }}">Year Ago Artists</a>
     <h2>Artists From 6 Months Ago:</h2>
-    <h2>{{ User.artist }}</h2>
+    {% if med_term | length > 0 %}
+        {% for i in range(0, 5) %}
+            <img src={{med_term_img[i]}} style="width:100px;height:100px;"><br>
+            <a href="{{ url_for('artist', name=med_term[i].name) }}">{{ med_term[i].name }}</a><br>
+        {% endfor %}
+    {% endif %}
     <a href="{{ url_for('sixmonthsartists') }}">Six Months Artists</a>
 </body>
 </html>
