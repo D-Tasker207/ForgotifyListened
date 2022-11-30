@@ -12,5 +12,3 @@ class Config(object):
 
     SESSION_TYPE = 'filesystem'
     SESSION_FILE_DIR = './.flask_session/'
-
-    REDIS_URL = os.environ.get('REDIS_URL') or 'redis://'

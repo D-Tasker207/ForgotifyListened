@@ -1,19 +1,19 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block app_content %}
     <h2>My Forgotten Artists From a Year Ago:</h2>
-    {% if long_term | length > 0 %}
+    {% if user.one_year_artists.all() | length > 0 %}
         <div class="row">
-            {% for i in range(0, size) %}
+            {% for i in range(0, user.one_year_artists.all() | length) %}
                 <div class="col-md-2">
-                    <div class="card" style="width: 200px;">
-                        <a href="{{ url_for('artist', name=long_term[i].name) }}"><img src={{long_term_img[i]}} style="width:200px;height:200px;"></a>
-                        <div class="card-body">
+                    <div class="card">
+                        <a href="{{ url_for('artist', name=user.one_year_artists[i].artist.name) }}"><img class="card-img-top" src="{{ user.one_year_artists[i].artist.img }}"></a>
+                        <div class="card-title">
                             <div class="text-center">
-                                <a class="card-text" href="{{ url_for('artist', name=long_term[i].name) }}">{{ long_term[i].name }}</a>
+                                <h5><a class="card-text" href="{{ url_for('artist', name=user.one_year_artists[i].artist.name) }}">{{ user.one_year_artists[i].artist.name }}</a></h5>
                             </div>
-                        </div><br>
-                    </div>
+                        </div>
+                    </div><br>
                 </div>
             {% endfor %}
         </div>
