@@ -1,7 +1,7 @@
 import spotipy
 from flask import session, redirect, url_for
 from flask_login  import current_user
-from  app import db
+from app import db
 from datetime import datetime
 from rq import get_current_job
 from app.models import Album, Artist, Song, ArtistToSong, User, UserToAlbum, UserToArtist, UserToSong, Task
@@ -68,24 +68,16 @@ def get_new_user_data():
 #this is not a good name for the function but idk what a a better name would be. 
 # it creates the links between the user and the music stuff for the mystuff pages
 def create_user_links():
-    # _set_task_progress(0)
     user_data = get_new_user_data()
-    # _set_task_progress(25)
 
     add_user_long_term_data(user_data[2])
-    # _set_task_progress(50)
     add_user_med_term_data(user_data[1])
-    # _set_task_progress(75)
     add_user_forgotten_data(user_data)
 
-
-    #User.query.filter_by(id=current_user.get_id()).first().last_pulled = datetime.now() 
     u = User.query.filter_by(id=current_user.get_id()).first()
     u.last_pulled = datetime.now()
     db.session.add(u)
     db.session.commit()
-    # _set_task_progress(100)
-
 
 def get_user_current_tracks(time_range):
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
@@ -156,8 +148,7 @@ def add_artists_to_db(artists_list):
                 uri=artist['uri']
             )
             db.session.add(new_artist)
-    
-    db.session.commit()
+            db.session.commit()
 
 def add_albums_to_db(albums_list):
     for album in albums_list:
@@ -173,8 +164,7 @@ def add_albums_to_db(albums_list):
                 artist_id=album['artist_id']
             )
             db.session.add(new_album)
- 
-    db.session.commit()
+            db.session.commit()
 
 def add_songs_to_db(songs_list):
     for song in songs_list:
@@ -195,8 +185,7 @@ def add_songs_to_db(songs_list):
                     song_id=song['id']
                 )
                 db.session.add(new_artist_to_song)
-
-    db.session.commit()
+                db.session.commit()
 
 #good god theres a lot of loops here
 def add_user_forgotten_data(user_data):
@@ -205,21 +194,22 @@ def add_user_forgotten_data(user_data):
     med_term_data = user_data[1]
     short_term_data = user_data[0]
 
-    #songs
+    # songs
     for i in long_term_data[0]:
         if ((i in med_term_data[0]) or (i in short_term_data[0])):
             long_term_data[0].remove(i)
 
-    #artist
+    # artist
     for i in long_term_data[1]:
         if ((i in med_term_data[1]) or (i in short_term_data[1])):
             long_term_data[1].remove(i)
 
-    #album
+    # album
     for i in long_term_data[2]:
         if ((i in med_term_data[2]) or (i in short_term_data[2])):
             long_term_data[2].remove(i)
     
+    print("AHHHHHH")
     add_user_song_links(long_term_data[0], data_type)
     add_user_artist_links(long_term_data[1], data_type)
     add_user_album_links(long_term_data[2], data_type)
@@ -237,40 +227,48 @@ def add_user_med_term_data(med_term_data):
     add_user_album_links(med_term_data[2], data_type)
 
 def add_user_song_links(song_list, data_type):
-    u2s = []
     for song in song_list:
-        u2s.append(UserToSong(
-            user_id = current_user.id, 
-            song_id = song['id'], 
-            forgotten=data_type[0], 
-            long_term=data_type[1], 
-            med_term=data_type[2]))
-    db.session.add_all(u2s)
-    db.session.commit()
+        entry_present = UserToSong.query.filter_by(song_id = song['id'], user_id = current_user.id, 
+            forgotten=data_type[0], long_term=data_type[1], med_term=data_type[2]).first()
+        if (entry_present is None):
+            new_u2s = UserToSong(
+                user_id = current_user.id, 
+                song_id = song['id'], 
+                forgotten=data_type[0], 
+                long_term=data_type[1], 
+                med_term=data_type[2])
+            db.session.add(new_u2s)
+            db.session.commit()
 
 def add_user_artist_links(artist_list, data_type):
-    u2ar = []
     for artist in artist_list:
-        u2ar.append(UserToArtist(
-            user_id = current_user.id,
-            artist_id = artist['id'], 
-            forgotten=data_type[0], 
-            long_term=data_type[1],
-            med_term=data_type[2]))
-    db.session.add_all(u2ar)
-    db.session.commit()
+        entry_present = UserToArtist.query.filter_by(artist_id = artist['id'], user_id = current_user.id,
+        forgotten=data_type[0], long_term=data_type[1], med_term=data_type[2]).first()
+        if (entry_present is None):
+            new_u2ar = UserToArtist(
+                user_id = current_user.id,
+                artist_id = artist['id'], 
+                forgotten=data_type[0], 
+                long_term=data_type[1],
+                med_term=data_type[2])
+            db.session.add(new_u2ar)
+            db.session.commit()
 
 def add_user_album_links(album_list, data_type):
     u2al = []
     for album in album_list:
-        u2al.append(UserToAlbum(
-            user_id= current_user.id, 
-            album_id= album['id'], 
-            forgotten=data_type[0], 
-            long_term=data_type[1], 
-            med_term=data_type[2]))
-    db.session.add_all(u2al)
-    db.session.commit()
+        
+        entry_present = UserToAlbum.query.filter_by(album_id = album['id'], user_id = current_user.id, 
+            forgotten=data_type[0], long_term=data_type[1], med_term=data_type[2]).first() 
+        if (entry_present is None):
+            new_u2al = UserToAlbum(
+                user_id= current_user.id, 
+                album_id= album['id'], 
+                forgotten=data_type[0], 
+                long_term=data_type[1], 
+                med_term=data_type[2])
+            db.session.add(new_u2al)
+            db.session.commit()
 
 def update_user_data():
     delete_current_user_links()
