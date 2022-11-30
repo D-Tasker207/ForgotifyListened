@@ -22,7 +22,7 @@ SCOPE = "user-top-read user-read-email playlist-modify-public"
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', title="Home")
 
 
 @app.route('/spotipytest')
@@ -97,7 +97,7 @@ def mystuffartists():
             med_term_img.append(images[i])
 
     return render_template('myStuffArtists.html', User=User, forgotten=forgotten, long_term=long_term, med_term=med_term,
-                           forgotten_img=forgotten_img, long_term_img=long_term_img, med_term_img=med_term_img)
+                           forgotten_img=forgotten_img, long_term_img=long_term_img, med_term_img=med_term_img, title="My Artists")
 
 
 @app.route('/most_forgotten_artists')
@@ -120,7 +120,7 @@ def mostforgottenartists():
             forgotten_img.append(images[i])
 
     return render_template('mostForgottenArtists.html', User=User, forgotten=forgotten, forgotten_img=forgotten_img,
-                           size=len(forgotten_img))
+                           size=len(forgotten_img), title="My Most Forgotten Artists:")
 
 
 @app.route('/one_year_artists')
@@ -143,7 +143,7 @@ def oneyearartists():
             long_term_img.append(images[i])
 
     return render_template('yearAgoArtists.html', User=User, long_term=long_term, long_term_img=long_term_img,
-                           size=len(long_term_img))
+                           size=len(long_term_img), title="One Year Ago")
 
 
 @app.route('/six_months_artists')
@@ -333,7 +333,7 @@ def new_user_dbpull():
     #     db.session.commit()
 
     create_user_links()
-    return redirect(url_for('mystuff/songs'))
+    return redirect(url_for('index'))
 
 
 @app.route('/testdbpull')

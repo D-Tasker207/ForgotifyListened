@@ -1,21 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<html>
-<head>
-    <title>My Most Forgotten Artists:</title>
-</head>
-<body>
     <h2>My Most Forgotten Artists:</h2>
     {% if forgotten | length > 0 %}
-        {% for i in range(0, size) %}
-            <img src={{forgotten_img[i]}} style="width:100px;height:100px;"><br>
-            <a href="{{ url_for('artist', name=forgotten[i].name) }}">{{ forgotten[i].name }}</a><br>
-        {% endfor %}
+        <div class="row">
+            {% for i in range(0, size) %}
+                <div class="col-md-2">
+                    <div class="card" style="width: 200px;">
+                        <a href="{{ url_for('artist', name=forgotten[i].name) }}"><img src={{forgotten_img[i]}} style="width:200px;height:200px;"></a>
+                        <div class="card-body">
+                            <div class="text-center">
+                                <a class="card-text" href="{{ url_for('artist', name=forgotten[i].name) }}">{{ forgotten[i].name }}</a>
+                            </div>
+                        </div><br>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>        
     {% endif %}
-</body>
-</html>
 {% endblock %}
-
-<!--Current user has a list of artists etc. Look at links in spotipy service file-->

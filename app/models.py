@@ -124,3 +124,6 @@ class UserToArtist(db.Model):
     forgotten = db.Column(db.Integer, index=True)
     long_term = db.Column(db.Integer,  index=True)
     med_term = db.Column(db.Integer, index=True)
+
+    def __repr__(self):
+        return str(self.id) + " " + self.artist_id + " " + str(self.user_id)

@@ -1,37 +1,66 @@
 {% extends "base.html" %}
 
-{% block content %}
-
-<html>
-<head>
-    <title>My Stuff Artists</title>
-</head>
-<body>
-    <a href="{{ url_for('mystuffsongs') }}">My Stuff Songs</a>
+{% block app_content %}
+    <div class="btn-group">
+        <a href="{{ url_for('mystuffartists') }}" class="btn btn-primary active">My Artists</a>
+        <a href="{{ url_for('mystuffsongs') }}" class="btn btn-primary">My Songs</a>
+    </div>
     <h2>My Most Forgotten Artists:</h2>
     {% if forgotten | length > 0 %}
-        {% for i in range(0, 5) %}
-            <img src={{forgotten_img[i]}} style="width:100px;height:100px;"><br>
-            <a href="{{ url_for('artist', name=forgotten[i].name) }}">{{ forgotten[i].name }}</a><br>
-        {% endfor %}
+        <div class="row">
+            {% for i in range(0, 5) %}
+                <div class="col-md-2">
+                    <div class="card" style="width: 200px;">
+                        <a href="{{ url_for('artist', name=forgotten[i].name) }}"><img src={{forgotten_img[i]}} style="width:200px;height:200px;" class="card-img-top"></a>
+                        <div class="card-body">
+                            <div class="text-center">
+                                <a class="card-text" href="{{ url_for('artist', name=forgotten[i].name) }}">{{ forgotten[i].name }}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     {% endif %}
-    <a href="{{ url_for('mostforgottenartists') }}">Most Forgotten Artists</a>
+    <br>
+    <a class="btn btn-primary" href="{{ url_for('mostforgottenartists') }}" role="button">Most Forgotten Artists</a>
     <h2>Artists From a Year Ago:</h2>
     {% if long_term | length > 0 %}
+        <div class="row">
         {% for i in range(0, 5) %}
-            <img src={{long_term_img[i]}} style="width:100px;height:100px;"><br>
-            <a href="{{ url_for('artist', name=long_term[i].name) }}">{{ long_term[i].name }}</a><br>
+            <div class="col-md-2">
+                <div class="card" style="width: 200px;">
+                    <a href="{{ url_for('artist', name=long_term[i].name) }}"><img src={{long_term_img[i]}} style="width:200px;height:200px;"></a>
+                    <div class="card-body">
+                        <div class="text-center">
+                            <a class="card-text" href="{{ url_for('artist', name=long_term[i].name) }}">{{ long_term[i].name }}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         {% endfor %}
+        </div>
     {% endif %}
-    <a href="{{ url_for('oneyearartists') }}">Year Ago Artists</a>
+    <br>
+    <a class="btn btn-primary" href="{{ url_for('oneyearartists') }}">Year Ago Artists</a>
     <h2>Artists From 6 Months Ago:</h2>
     {% if med_term | length > 0 %}
-        {% for i in range(0, 5) %}
-            <img src={{med_term_img[i]}} style="width:100px;height:100px;"><br>
-            <a href="{{ url_for('artist', name=med_term[i].name) }}">{{ med_term[i].name }}</a><br>
-        {% endfor %}
+        <div class="row">
+            {% for i in range(0, 5) %}
+            <div class="col-md-2">
+                <div class="card" style="width: 200px;">
+                    <a href="{{ url_for('artist', name=med_term[i].name) }}"><img src={{med_term_img[i]}} style="width:200px;height:200px;"></a>
+                    <div class="card-body">
+                        <div class="text-center">
+                        <a href="{{ url_for('artist', name=med_term[i].name) }}">{{ med_term[i].name }}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>    
     {% endif %}
-    <a href="{{ url_for('sixmonthsartists') }}">Six Months Artists</a>
-</body>
-</html>
+    <br>
+    <a class="btn btn-primary" href="{{ url_for('sixmonthsartists') }}">Six Months Artists</a>
+    <br><br>
 {% endblock %}
