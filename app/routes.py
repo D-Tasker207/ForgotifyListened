@@ -143,7 +143,7 @@ def oneyearartists():
             long_term_img.append(images[i])
 
     return render_template('yearAgoArtists.html', User=User, long_term=long_term, long_term_img=long_term_img,
-                           size=len(long_term_img))
+                           size=len(long_term_img), title="One Year Ago")
 
 
 @app.route('/six_months_artists')
