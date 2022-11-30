@@ -6,7 +6,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Song, Album, Artist
 from app.spotify_service import get_user, get_new_user_data, create_user_links, update_user_data
 
-SCOPE = "user-top-read user-read-email playlist-modify-public"
+SCOPE = "user-top-read user-read-email"
 
 # #function to call the data refresh functions when 90 days have passed since last pull
 # @app.before_request
@@ -23,25 +23,15 @@ SCOPE = "user-top-read user-read-email playlist-modify-public"
 def index():
     return render_template('index.html', title="Home")
 
-@app.route('/artist/<name>')
-def artist(name):
-    return render_template('artist.html', artist=Artist, name=name)
+@app.route('/artist/<id>')
+def artist(id):
+    artist = Artist.query.filter_by(id=id).first()
+    return render_template('artist.html', artist=artist)
 
-@app.route('/artistlist')
-def artistlist():
-    return "Hello, world!"
-
-@app.route('/song/<name>')
-def song(name):
-    song_id = Song.query.filter_by(name=name).first()
-    artist_id = [x.artist_id for x in song_id.artist2song]
-    artist = [Artist.query.filter_by(id=x).first().name for x in artist_id]
-
-    return render_template('song.html', Song=Song, name=name, artist=artist, size=len(artist))
-
-@app.route('/songlist')
-def songlist():
-    return "Hello, world!"
+@app.route('/song/<id>')
+def song(id):
+    song = Song.query.filter_by(id=id).first()
+    return render_template('song.html', song=song, title=song.name)
 
 @app.route('/album/<name>')
 def album(name):
@@ -99,12 +89,6 @@ def sixmonthssongs():
 @app.route('/recommended')
 def recommended():
     return render_template('recommended.html')
-
-@app.route('/contact', methods=['GET', 'POST'])
-def contact():
-    # form = ContactUsForm()
-    # return render_template('contact.html', title='Contact Us', form=form)
-    return "Hello, world!"
 
 @app.route('/login')
 def login():

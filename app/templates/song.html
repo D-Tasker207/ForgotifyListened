@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 
-{% block content %}
-<html>
-<head>
-    <title>{{ name }}</title>
-</head>
-<body>
-    <h2>{{ name  }}</h2>
-    {% for i in range(0,size) %}
-        <h2>{{ artist[i] }}</h2>
-    {% endfor %}
-    <h2>{{ album }}</h2>
-        <h2>More by This Artist:</h2>
-
-</body>
-</html>
+{% block app_content %}
+    <div class="row">
+        <div class="col-md-4">
+            <img class="detail-img" src="{{ song.album.img }}">
+        </div>
+        <div class="col-md-8">
+            <h1>{{ song.name  }} - {{ song.album.name }}</h1>
+            <h3>by 
+            {% for song2artist in song.artists %}
+                {{ song2artist.artist.name }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+            </h3><br>
+            <a class="btn btn-primary" href="{{ song.external_url }}" target="_blank" rel="noopener noreferrer">Listen on Spotify</a>
+        </div>
+    </div>
 {% endblock %}

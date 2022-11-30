@@ -11,10 +11,10 @@
             {% for i in range(0, 5) %}
                 <div class="col-md-2">
                     <div class="card">
-                        <a href="{{ url_for('song', name=user.forgotten_songs[i].song.name)}}"><img class="card-img-top" src="{{ user.forgotten_songs[i].song.album.img }}"></a>
+                        <a href="{{ url_for('song', id=user.forgotten_songs[i].song.id)}}"><img class="card-img-top" src="{{ user.forgotten_songs[i].song.album.img }}"></a>
                         <div class="card-title">
                             <div class="text-center">
-                                <h5><a class="card-text" href="{{ url_for('song', name=user.forgotten_songs[i].song.name) }}">{{ user.forgotten_songs[i].song.name }}</a></h5>
+                                <h5><a class="card-text" href="{{ url_for('song', id=user.forgotten_songs[i].song.id) }}">{{ user.forgotten_songs[i].song.name }}</a></h5>
                             </div>
                         </div>
                     </div>
@@ -30,10 +30,10 @@
             {% for i in range(0, 5) %}
                 <div class="col-md-2">
                     <div class="card">
-                        <a href="{{ url_for('song', name=user.one_year_songs[i].song.name) }}"><img class="card-img-top" src="{{ user.one_year_songs[i].song.album.img }}"></a>
+                        <a href="{{ url_for('song', id=user.one_year_songs[i].song.id) }}"><img class="card-img-top" src="{{ user.one_year_songs[i].song.album.img }}"></a>
                         <div class="card-title">
                             <div class="text-center">
-                                <h5><a class="card-text" href="{{ url_for('song', name=user.one_year_songs[i].song.name) }}">{{ user.one_year_songs[i].song.name }}</a></h5>
+                                <h5><a class="card-text" href="{{ url_for('song', id=user.one_year_songs[i].song.id) }}">{{ user.one_year_songs[i].song.name }}</a></h5>
                             </div>
                         </div>
                     </div>
@@ -49,10 +49,10 @@
             {% for i in range(0, 5) %}
                 <div class="col-md-2">
                     <div class="card">
-                        <a href="{{ url_for('song', name=user.six_month_songs[i].song.name) }}"><img class="card-img-top" src="{{ user.six_month_songs[i].song.album.img }}"></a>
+                        <a href="{{ url_for('song', id=user.six_month_songs[i].song.id) }}"><img class="card-img-top" src="{{ user.six_month_songs[i].song.album.img }}"></a>
                         <div class="card-title">
                             <div class="text-center">
-                                <h5><a class="card-text" href="{{ url_for('song', name=user.six_month_songs[i].song.name) }}">{{ user.six_month_songs[i].song.name }}</a></h5>
+                                <h5><a class="card-text" href="{{ url_for('song', id=user.six_month_songs[i].song.id) }}">{{ user.six_month_songs[i].song.name }}</a></h5>
                             </div>
                         </div>
                     </div>

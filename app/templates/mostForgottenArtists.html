@@ -7,10 +7,10 @@
             {% for i in range(0, user.forgotten_artists.all() | length) %}
                 <div class="col-md-2">
                     <div class="card">
-                        <a href="{{ url_for('artist', name=user.forgotten_artists[i].artist.name) }}"><img class="card-img-top" src="{{ user.forgotten_artists[i].artist.img }}"></a>
+                        <a href="{{ url_for('artist', id=user.forgotten_artists[i].artist.id) }}"><img class="card-img-top" src="{{ user.forgotten_artists[i].artist.img }}"></a>
                         <div class="card-title">
                             <div class="text-center">
-                                <h5><a class="card-text" href="{{ url_for('artist', name=user.forgotten_artists[i].artist.name) }}">{{ user.forgotten_artists[i].artist.name }}</a></h5>
+                                <h5><a class="card-text" href="{{ url_for('artist', id=user.forgotten_artists[i].artist.id) }}">{{ user.forgotten_artists[i].artist.name }}</a></h5>
                             </div>
                         </div>
                     </div><br>

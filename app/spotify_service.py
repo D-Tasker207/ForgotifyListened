@@ -31,9 +31,9 @@ def get_new_user_data():
 def create_user_links():
     user_data = get_new_user_data()
 
-    add_user_long_term_data(user_data[2])
-    add_user_med_term_data(user_data[1])
-    add_user_forgotten_data(user_data)
+    add_user_long_term_data(user_data[1])
+    add_user_med_term_data(user_data[0])
+    add_user_forgotten_data(user_data[2])
 
     u = User.query.filter_by(id=current_user.get_id()).first()
     u.last_pulled = datetime.now()
@@ -149,41 +149,20 @@ def add_songs_to_db(songs_list):
                 db.session.commit()
 
 #good god theres a lot of loops here
-def add_user_forgotten_data(user_data):
-    data_type = [1,0,0]
-    long_term_data = user_data[2]
-    med_term_data = user_data[1]
-    short_term_data = user_data[0]
-
-    # songs
-    for i in long_term_data[0]:
-        if ((i in med_term_data[0]) or (i in short_term_data[0])):
-            long_term_data[0].remove(i)
-
-    # artist
-    for i in long_term_data[1]:
-        if ((i in med_term_data[1]) or (i in short_term_data[1])):
-            long_term_data[1].remove(i)
-
-    # album
-    for i in long_term_data[2]:
-        if ((i in med_term_data[2]) or (i in short_term_data[2])):
-            long_term_data[2].remove(i)
-    
-    print("AHHHHHH")
+def add_user_forgotten_data(long_term_data):
     add_F_user_song_links(long_term_data[0])
     add_F_user_artist_links(long_term_data[1])
     add_F_user_album_links(long_term_data[2])
     
-def add_user_long_term_data(long_term_data):
-    add_LT_user_song_links(long_term_data[0])
-    add_LT_user_artist_links(long_term_data[1])
-    add_LT_user_album_links(long_term_data[2])
+def add_user_long_term_data(med_term_data):
+    add_LT_user_song_links(med_term_data[0])
+    add_LT_user_artist_links(med_term_data[1])
+    add_LT_user_album_links(med_term_data[2])
 
-def add_user_med_term_data(med_term_data):
-    add_MT_user_song_links(med_term_data[0])
-    add_MT_user_artist_links(med_term_data[1])
-    add_MT_user_album_links(med_term_data[2])
+def add_user_med_term_data(short_term_data):
+    add_MT_user_song_links(short_term_data[0])
+    add_MT_user_artist_links(short_term_data[1])
+    add_MT_user_album_links(short_term_data[2])
 
 def add_LT_user_song_links(song_list):
     for song in song_list:
