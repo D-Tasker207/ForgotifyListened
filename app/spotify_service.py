@@ -1,6 +1,6 @@
 import spotipy
 from flask import session, redirect, url_for
-from flask_login  import current_user
+from flask_login import current_user
 from app import db
 from datetime import datetime
 from app.models import Album, Artist, Song, ArtistToSong, User, UserToAlbumF, UserToArtistF, UserToSongF, UserToAlbumOY, UserToSongOY, UserToArtistOY, UserToSongOY, UserToSongOY, UserToAlbumSM, UserToArtistSM, UserToSongSM
@@ -109,7 +109,8 @@ def add_artists_to_db(artists_list):
                 uri=artist['uri']
             )
             db.session.add(new_artist)
-            db.session.commit()
+
+    db.session.commit()
 
 def add_albums_to_db(albums_list):
     for album in albums_list:
@@ -125,7 +126,7 @@ def add_albums_to_db(albums_list):
                 artist_id=album['artist_id']
             )
             db.session.add(new_album)
-            db.session.commit()
+    db.session.commit()
 
 def add_songs_to_db(songs_list):
     for song in songs_list:
@@ -146,7 +147,8 @@ def add_songs_to_db(songs_list):
                     song_id=song['id']
                 )
                 db.session.add(new_artist_to_song)
-                db.session.commit()
+
+    db.session.commit()
 
 #good god theres a lot of loops here
 def add_user_forgotten_data(user_data):
@@ -155,17 +157,17 @@ def add_user_forgotten_data(user_data):
     med_term_data = user_data[1]
     short_term_data = user_data[0]
 
-    # songs
+    #songs
     for i in long_term_data[0]:
         if ((i in med_term_data[0]) or (i in short_term_data[0])):
             long_term_data[0].remove(i)
 
-    # artist
+    #artist
     for i in long_term_data[1]:
         if ((i in med_term_data[1]) or (i in short_term_data[1])):
             long_term_data[1].remove(i)
 
-    # album
+    #album
     for i in long_term_data[2]:
         if ((i in med_term_data[2]) or (i in short_term_data[2])):
             long_term_data[2].remove(i)
@@ -190,7 +192,7 @@ def add_LT_user_song_links(song_list):
         entry_present = UserToSongOY.query.filter_by(song_id = song['id'], user_id = current_user.id).first()
         if (entry_present is None):
             new_u2s = UserToSongOY(
-                user_id = current_user.id, 
+                user_id = current_user.id,
                 song_id = song['id'])
             db.session.add(new_u2s)
             db.session.commit()
@@ -200,7 +202,7 @@ def add_MT_user_song_links(song_list):
         entry_present = UserToSongSM.query.filter_by(song_id = song['id'], user_id = current_user.id).first()
         if (entry_present is None):
             new_u2s = UserToSongSM(
-                user_id = current_user.id, 
+                user_id = current_user.id,
                 song_id = song['id'])
             db.session.add(new_u2s)
             db.session.commit()
@@ -210,7 +212,7 @@ def add_F_user_song_links(song_list):
         entry_present = UserToSongF.query.filter_by(song_id = song['id'], user_id = current_user.id).first()
         if (entry_present is None):
             new_u2s = UserToSongF(
-                user_id = current_user.id, 
+                user_id = current_user.id,
                 song_id = song['id'])
             db.session.add(new_u2s)
             db.session.commit()
@@ -247,30 +249,30 @@ def add_F_user_artist_links(artist_list):
 
 def add_LT_user_album_links(album_list):
     for album in album_list:
-        entry_present = UserToAlbumOY.query.filter_by(album_id = album['id'], user_id = current_user.id).first() 
+        entry_present = UserToAlbumOY.query.filter_by(album_id = album['id'], user_id = current_user.id).first()
         if (entry_present is None):
             new_u2al = UserToAlbumOY(
-                user_id= current_user.id, 
+                user_id= current_user.id,
                 album_id= album['id'])
             db.session.add(new_u2al)
             db.session.commit()
 
 def add_MT_user_album_links(album_list):
     for album in album_list:
-        entry_present = UserToAlbumSM.query.filter_by(album_id = album['id'], user_id = current_user.id).first() 
+        entry_present = UserToAlbumSM.query.filter_by(album_id = album['id'], user_id = current_user.id).first()
         if (entry_present is None):
             new_u2al = UserToAlbumSM(
-                user_id= current_user.id, 
+                user_id= current_user.id,
                 album_id= album['id'])
             db.session.add(new_u2al)
             db.session.commit()
 
 def add_F_user_album_links(album_list):
     for album in album_list:
-        entry_present = UserToAlbumF.query.filter_by(album_id = album['id'], user_id = current_user.id).first() 
+        entry_present = UserToAlbumF.query.filter_by(album_id = album['id'], user_id = current_user.id).first()
         if (entry_present is None):
             new_u2al = UserToAlbumF(
-                user_id= current_user.id, 
+                user_id= current_user.id,
                 album_id= album['id'])
             db.session.add(new_u2al)
             db.session.commit()
