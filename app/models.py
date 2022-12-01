@@ -19,7 +19,6 @@ class User(UserMixin, db.Model):
     six_month_artists = db.relationship("UserToArtistSM", backref='user', lazy='dynamic')
     six_month_albums = db.relationship("UserToAlbumSM", backref='user', lazy='dynamic')
 
-
     
 @login.user_loader
 def load_user(id):

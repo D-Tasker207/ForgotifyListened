@@ -3,25 +3,20 @@ from datetime import timedelta, datetime
 from app import app, db
 from flask import render_template, redirect, url_for, session, request, flash
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, Song, Album, Artist
+from app.models import User, Song, Album, Artist, UserToSongF
 from app.spotify_service import get_user, get_new_user_data, create_user_links, update_user_data
 
 SCOPE = "user-top-read user-read-email"
 
-# #function to call the data refresh functions when 90 days have passed since last pull
-# @app.before_request
-# def before_request():
-#     if(current_user.is_authenticated):
-#         today = datetime.today()
-#         user = User.query.filter_by(id=current_user.get_id()).first()
-#         if user.last_pulled < today - timedelta(days=90):
-#             redirect('update_user_data')
-
-
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html', title="Home")
+    mfs = UserToSongF.query.all()
+    ids = [x.song_id for x in mfs]
+    nam = [Song.query.filter_by(id=x).first() for x in ids]
+    names = [x.name for x in nam]
+
+    return render_template('index.html', names=names, ids=ids, title="Home")
 
 @app.route('/artist/<id>')
 def artist(id):
