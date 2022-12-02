@@ -12,11 +12,7 @@ SCOPE = "user-top-read user-read-email"
 @app.route('/index')
 def index():
     mfs = UserToSongF.query.all()
-    ids = [x.song_id for x in mfs]
-    nam = [Song.query.filter_by(id=x).first() for x in ids]
-    names = [x.name for x in nam]
-
-    return render_template('index.html', names=names, ids=ids, title="Home")
+    return render_template('index.html', mfs=mfs, title="Home")
 
 @app.route('/artist/<id>')
 def artist(id):

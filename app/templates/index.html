@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-    <h2>My Most Forgotten Stuff:</h2>
     <h2>Recommended by Users:</h2>
     <h2>Most Forgotten (Overall on the Site):</h2>
-    {% if names | length > 5 %}
+    {% if mfs | length > 5 %}
         <div class="row">
             {% for i in range(0, 5) %}
                 <div class="col-md-2">
                     <div class="card">
+                        <a href="{{ url_for('song', id=mfs[i].song.id) }}"><img class="card-img-top" src="{{ mfs[i].song.album.img }}"></a>
                         <div class="card-title">
                             <div class="text-center">
-                                <h5><a class="card-text" href="{{ url_for('song', id=ids[i]) }}">{{ names[i] }}</a></h5>
+                                <h5><a class="card-text" href="{{ url_for('song', id=mfs[i].song.id) }}">{{ mfs[i].song.name }}</a></h5>
                             </div>
                         </div>
                     </div>
