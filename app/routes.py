@@ -24,9 +24,11 @@ def song(id):
     song = Song.query.filter_by(id=id).first()
     return render_template('song.html', song=song, title=song.name)
 
-@app.route('/album/<name>')
-def album(name):
-    return render_template('album.html', album=Album, name=name)
+
+@app.route('/album/<id>')
+def album(id):
+    album = Album.query.first()
+    return render_template('album.html', album=album, title=album.name)
 
 @app.route('/mystuff/artists')
 @login_required
