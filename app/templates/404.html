@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block app_content %}
 
-<h1>You messed up</h1>
+<h1>Error 404 - Page Not Found</h1>
+<h3>We can't seem to find the page you're looking for; The url may be incorrect</h3>
+<br>
+<a class="btn btn-primary" href="{{ url_for('index')}}">Return to Home</a>
 
 {% endblock %}

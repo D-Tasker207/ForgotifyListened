@@ -4,9 +4,19 @@ from app import app, db
 from flask import render_template, redirect, url_for, session, request, flash
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Song, Album, Artist, UserToSongF
-from app.spotify_service import get_user, get_new_user_data, create_user_links, update_user_data
+from app.spotify_service import get_user, get_new_user_data, create_user_links, update_data
 
 SCOPE = "user-top-read user-read-email"
+
+#function to call the data refresh functions when 90 days have passed since last pull
+@app.before_request
+def before_request():
+    if(current_user.is_authenticated):
+        today = datetime.today()
+        user = User.query.filter_by(id=current_user.get_id()).first()
+        if user.last_pulled < today - timedelta(days=90):
+            redirect('update_user_data')
+
 
 @app.route('/')
 @app.route('/index')
@@ -23,7 +33,6 @@ def artist(id):
 def song(id):
     song = Song.query.filter_by(id=id).first()
     return render_template('song.html', song=song, title=song.name)
-
 
 @app.route('/album/<id>')
 def album(id):
@@ -81,7 +90,10 @@ def sixmonthssongs():
 
 @app.route('/recommended')
 def recommended():
-    return render_template('recommended.html')
+    songs = Song.query.order_by('rec_count').all()
+    albums = Album.query.order_by('rec_count').all()
+    artists = Artist.query.order_by('rec_count').all()
+    return render_template('recommended.html', songs=songs, albums=albums, artists=artists, title="Recommended")
 
 @app.route('/login')
 def login():
@@ -109,7 +121,7 @@ def callback():
         login_user(user)
     else:
         login_user(user)
-    return redirect('/new_user_dbpull')
+    return redirect('/update_user_data')
 
 
 @app.route('/logout')
@@ -125,17 +137,6 @@ def get_email():
 
 @app.route('/update_user_data')
 def update_user_data():
-    update_user_data()
+    update_data()
     return redirect(url_for("index"))
-
-@app.route('/new_user_dbpull')
-def new_user_dbpull():
-    create_user_links()
-    return redirect(url_for('index'))
-
-@app.route('/testdbpull')
-@login_required
-def testdbpull():
-    user_data = get_new_user_data()
-    return user_data
 

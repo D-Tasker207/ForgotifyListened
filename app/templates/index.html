@@ -4,7 +4,7 @@
 <link rel="stylesheet"
       href="{{url_for('static', filename='forgotify.css')}}">
 {% if current_user.is_anonymous %}
-<a class="btn btn-primary btn-lg  btn-block" href="{{ url_for('login') }}" target="_blank" rel="noopener noreferrer">Login</a><br>
+<a class="btn btn-primary btn-lg  btn-block" href="{{ url_for('login') }}">Login</a><br>
     <h2>Most Forgotten (Overall on the Site):</h2>
     {% if mfs | length > 5 %}
         <div class="row">

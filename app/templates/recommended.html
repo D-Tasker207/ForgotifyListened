@@ -1,15 +1,58 @@
 {% extends "base.html" %}
 
-{% block content %}
-
-<html>
-<head>
-    <title>Recommended by Users</title>
-</head>
-<body>
+{% block app_content %}
     <h2>Songs Recommended by Users:</h2>
+    {% if songs | length > 5 %}
+        <div class="row">
+            {% for i in range(0, 5) %}
+                <div class="col-md-2">
+                    <div class="card">
+                        <a href="{{ url_for('song', id=songs[i].id) }}"><img class="card-img-top" src="{{ songs[i].album.img }}"></a>
+                        <div class="card-title">
+                            <div class="text-center">
+                                <h5><a class="card-text" href="{{ url_for('song', id=songs[i].id) }}">{{ songs[i].name }}</a></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <br>
     <h2>Artists Recommended by Users:</h2>
+    {% if artists | length > 5 %}
+        <div class="row">
+            {% for i in range(0, 5) %}
+                <div class="col-md-2">
+                    <div class="card">
+                        <a href="{{ url_for('artist', id=artists[i].id) }}"><img class="card-img-top" src="{{ artists[i].img }}"></a>
+                        <div class="card-title">
+                            <div class="text-center">
+                                <h5><a class="card-text" href="{{ url_for('artist', id=artists[i].id) }}">{{ artists[i].name }}</a></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <br>
     <h2>Albums Recommended by Users:</h2>
-</body>
-</html>
+    {% if albums | length > 5 %}
+        <div class="row">
+            {% for i in range(0, 5) %}
+                <div class="col-md-2">
+                    <div class="card">
+                        <a href="{{ url_for('album', id=albums[i].id) }}"><img class="card-img-top" src="{{ albums[i].img }}"></a>
+                        <div class="card-title">
+                            <div class="text-center">
+                                <h5><a class="card-text" href="{{ url_for('album', id=albums[i].id) }}">{{ albums[i].name }}</a></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <br>
 {% endblock %}</html>

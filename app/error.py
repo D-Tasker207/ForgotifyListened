@@ -1,5 +1,5 @@
 from app import app, db
-from flask import render_template, redirect, url_for
+from flask import render_template, url_for
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -7,4 +7,4 @@ def page_not_found(error):
 
 @app.errorhandler(500)
 def internal_error(error):
-    return render_template('500.html'), 500
+    return render_template('500.html', title="Error 500"), 500

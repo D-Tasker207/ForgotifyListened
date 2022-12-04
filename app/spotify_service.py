@@ -151,8 +151,33 @@ def add_songs_to_db(songs_list):
     db.session.commit()
 
 def add_user_forgotten_data(long_term_data):
+    u = User.query.filter_by(id=current_user.id).first()
+    existing_song_list = u.one_year_songs.all()
+    existing_song_list.extend(u.six_month_songs.all())
+    existing_song_list = list(map(lambda x: str(x), existing_song_list))
+    for song in long_term_data[0]:
+        if (song['id'] + " " + str(u.id) in existing_song_list):
+            long_term_data[0].remove(song)
+
     add_F_user_song_links(long_term_data[0])
+
+    existing_artist_list = u.one_year_artists.all()
+    existing_artist_list.extend(u.six_month_artists.all())
+    existing_artist_list = list(map(lambda x: str(x), existing_artist_list))
+    for artist in long_term_data[1]:
+        if (artist['id'] + " " + str(u.id) in existing_artist_list):
+            print('removed')
+            long_term_data[1].remove(artist)
+
     add_F_user_artist_links(long_term_data[1])
+
+    existing_album_list = u.one_year_albums.all()
+    existing_album_list.extend(u.six_month_albums.all())
+    existing_album_list = list(map(lambda x: str(x), existing_album_list))
+    for album in long_term_data[2]:
+        if (album['id'] + " " + str(u.id) in existing_album_list):
+            long_term_data[2].remove(album)
+            
     add_F_user_album_links(long_term_data[2])
     
 def add_user_long_term_data(med_term_data):
@@ -255,23 +280,21 @@ def add_F_user_album_links(album_list):
             db.session.add(new_u2al)
             db.session.commit()
 
-def update_user_data():
+def update_data():
     delete_current_user_links()
-    user_data = get_new_user_data()
-    create_user_links(user_data)
-    User.query.filter_by(id=current_user.get_id()).first().last_pulled = datetime.now() 
+    create_user_links()
 
 def delete_current_user_links():
     #delete all links in the user join tables
-    UserToAlbumF.filter_by(user_id=current_user.id).delete()
-    UserToArtistF.filter_by(user_id=current_user.id).delete()
-    UserToSongF.filter_by(user_id=current_user.id).delete()
+    UserToAlbumF.query.filter_by(user_id=current_user.id).delete()
+    UserToArtistF.query.filter_by(user_id=current_user.id).delete()
+    UserToSongF.query.filter_by(user_id=current_user.id).delete()
 
-    UserToAlbumOY.filter_by(user_id=current_user.id).delete()
-    UserToArtistOY.filter_by(user_id=current_user.id).delete()
-    UserToSongOY.filter_by(user_id=current_user.id).delete()
+    UserToAlbumOY.query.filter_by(user_id=current_user.id).delete()
+    UserToArtistOY.query.filter_by(user_id=current_user.id).delete()
+    UserToSongOY.query.filter_by(user_id=current_user.id).delete()
 
-    UserToAlbumSM.filter_by(user_id=current_user.id).delete()
-    UserToArtistSM.filter_by(user_id=current_user.id).delete()
-    UserToSongSM.filter_by(user_id=current_user.id).delete()
+    UserToAlbumSM.query.filter_by(user_id=current_user.id).delete()
+    UserToArtistSM.query.filter_by(user_id=current_user.id).delete()
+    UserToSongSM.query.filter_by(user_id=current_user.id).delete()
     db.session.commit()

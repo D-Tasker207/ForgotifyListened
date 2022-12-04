@@ -34,7 +34,6 @@ class Album(db.Model):
     uri = db.Column(db.String(64))
     artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'))
     songs = db.relationship("Song", backref="album", lazy='dynamic')
-    song2album = db.relationship('AlbumToSong', backref='album', lazy='dynamic')
     user2albumF = db.relationship('UserToAlbumF', backref='album', lazy='dynamic')
     user2albumOY = db.relationship('UserToAlbumOY', backref='album', lazy='dynamic')
     user2albumSM = db.relationship('UserToAlbumSM', backref='album', lazy='dynamic')
@@ -61,7 +60,6 @@ class Song(db.Model):
     uri = db.Column(db.String(64))
     album_id = db.Column(db.Integer, db.ForeignKey('album.id'))
     artists = db.relationship('ArtistToSong', backref='song', lazy='dynamic')
-    albums = db.relationship('AlbumToSong', backref='song', lazy='dynamic')
     user2songF = db.relationship('UserToSongF', backref='song', lazy='dynamic')
     user2songOY = db.relationship('UserToSongOY', backref='song', lazy='dynamic')
     user2songSM = db.relationship('UserToSongSM', backref='song', lazy='dynamic')
@@ -72,25 +70,29 @@ class ArtistToSong(db.Model):
     artist_id = db.Column(db.String(64), db.ForeignKey('artist.id'), index=True)
     song_id = db.Column(db.String(64), db.ForeignKey('song.id'), index=True)
 
-class AlbumToSong(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    album_id = db.Column(db.String(64), db.ForeignKey('album.id'), index=True)
-    song_id = db.Column(db.String(64), db.ForeignKey('song.id'), index=True)
-
 class UserToSongF(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     song_id = db.Column(db.String(64), db.ForeignKey('song.id'), index=True)
     user_id = db.Column(db.String(64), db.ForeignKey('user.id'), index=True)
+
+    def __repr__(self):
+        return str(self.song_id) + " " + str(self.user_id)
 
 class UserToSongOY(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     song_id = db.Column(db.String(64), db.ForeignKey('song.id'), index=True)
     user_id = db.Column(db.String(64), db.ForeignKey('user.id'), index=True)
 
+    def __repr__(self):
+        return str(self.song_id) + " " + str(self.user_id)
+
 class UserToSongSM(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     song_id = db.Column(db.String(64), db.ForeignKey('song.id'), index=True)
     user_id = db.Column(db.String(64), db.ForeignKey('user.id'), index=True)
+
+    def __repr__(self):
+        return str(self.song_id) + " " + str(self.user_id)
 
 
 class UserToAlbumF(db.Model):
@@ -98,15 +100,24 @@ class UserToAlbumF(db.Model):
     album_id = db.Column(db.String(64), db.ForeignKey('album.id'), index=True)
     user_id = db.Column(db.String(64), db.ForeignKey('user.id'), index=True)
 
+    def __repr__(self):
+        return str(self.album_id) + " " + str(self.user_id)
+
 class UserToAlbumOY(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     album_id = db.Column(db.String(64), db.ForeignKey('album.id'), index=True)
     user_id = db.Column(db.String(64), db.ForeignKey('user.id'), index=True)
 
+    def __repr__(self):
+        return str(self.album_id) + " " + str(self.user_id)
+
 class UserToAlbumSM(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     album_id = db.Column(db.String(64), db.ForeignKey('album.id'), index=True)
     user_id = db.Column(db.String(64), db.ForeignKey('user.id'), index=True)
+
+    def __repr__(self):
+        return str(self.album_id) + " " + str(self.user_id)
 
 
 class UserToArtistF(db.Model):
@@ -114,12 +125,21 @@ class UserToArtistF(db.Model):
     artist_id = db.Column(db.String(64), db.ForeignKey('artist.id'), index=True)
     user_id = db.Column(db.String(64), db.ForeignKey('user.id'), index=True)
 
+    def __repr__(self):
+        return str(self.artist_id) + " " + str(self.user_id)
+
 class UserToArtistOY(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     artist_id = db.Column(db.String(64), db.ForeignKey('artist.id'), index=True)
     user_id = db.Column(db.String(64), db.ForeignKey('user.id'), index=True)
 
+    def __repr__(self):
+        return str(self.artist_id) + " " + str(self.user_id)
+
 class UserToArtistSM(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     artist_id = db.Column(db.String(64), db.ForeignKey('artist.id'), index=True)
     user_id = db.Column(db.String(64), db.ForeignKey('user.id'), index=True)
+
+    def __repr__(self):
+        return str(self.artist_id) + " " + str(self.user_id)
