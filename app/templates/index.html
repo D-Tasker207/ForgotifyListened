@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 {% block app_content %}
+<link rel="stylesheet"
+      href="{{url_for('static', filename='forgotify.css')}}">
 <a class="btn btn-primary btn-lg  btn-block" href="{{ url_for('login') }}" target="_blank" rel="noopener noreferrer">Login</a><br>
     <h2>Most Forgotten (Overall on the Site):</h2>
     {% if mfs | length > 5 %}
