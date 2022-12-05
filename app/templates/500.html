@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block app_content %}
 
-<h1>We messed up</h1>
+<h1>Error 500 - Internal Service Error</h1>
+<h3>Something has gone wrong on our end. We're working hard to fix it</h3>
+<br>
+<a class="btn btn-primary" href="{{ url_for('index')}}">Return to Home</a>
 
 {% endblock %}

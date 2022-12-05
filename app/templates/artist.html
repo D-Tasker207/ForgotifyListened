@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 
-{% block content %}
-<html>
-<head>
-    <title>{{ name }}</title>
-</head>
-<body>
-    <h2>{{ name  }}</h2>
-    <h2>Discography:</h2>
-</body>
-</html>
+{% block app_content %}
+<div class="row">
+    <div class="col-md-4">
+        <img class="detail-img" src="{{ artist.img }}">
+    </div>
+    <div class="col-md-8">
+        <h1>{{ artist.name  }}</h1>
+        </h3><br>
+        <a class="btn btn-primary" href="{{ artist.external_url }}" target="_blank" rel="noopener noreferrer">Listen on Spotify</a>
+    </div>
+</div>
 {% endblock %}

@@ -4,8 +4,40 @@
     {{ title }} - Forgotify listened
 {% endblock %}
 
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet"
+      href="{{url_for('static', filename='forgotify.css')}}">
+{% endblock %}
+
 {% block navbar %}
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <ul class="nav nav-tabs">
+        <li class="nav-item"></li>
+            <a class="navbar-brand" href="{{ url_for('index') }}">Forgotify Listened</a>
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{{ url_for('index') }}">Home</a>
+        </li>
+        {% if current_user.is_anonymous %}
+        <li class="nav-item">
+            <a class="nav-link active" href="{{  url_for('recommended') }}">Recommended</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="{{ url_for('login') }}">Login</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+            <a class="nav-link active" href="{{ url_for('mystuffsongs') }}">My Stuff</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="{{  url_for('recommended') }}">Recommended</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="{{ url_for('logout') }}">Logout</a>
+        </li>             
+        {% endif %}
+    </ul>
+    <!-- <nav class="nav nav-tabs">
         <div class="container-">
             <a class="navbar-brand" href="{{ url_for('index') }}">Forgotify Listened</a>
             <br>
@@ -14,7 +46,6 @@
                     <a class="nav-link active" href="{{ url_for('index') }}">Home</a>
                     {% if current_user.is_anonymous %}
                         <a class="nav-link active" href="{{  url_for('recommended') }}">Recommended</a>
-                        <a class="nav-link active" href="{{ url_for('login') }}">Login</a>
                     {% else %}
                         <a class="nav-link active" href="{{ url_for('mystuffsongs') }}">My Stuff</a>
                         <a class="nav-link active" href="{{  url_for('recommended') }}">Recommended</a>
@@ -23,37 +54,23 @@
                 </div>                
             </div>
         </div>
-    </nav>
+    </nav> -->
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-info" role="alert">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-        {% endwith %}
+    <br>
+    <div class="content">
+        <div class="container">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-info" role="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
+
+            {# application content needs to be provided in the app_content block #}
+            {% block app_content %}{% endblock %}
     </div>
-
-        {# application content needs to be provided in the app_content block #}
-        {% block app_content %}{% endblock %}
 {% endblock %}
-
-<html>
-    <style>
-        p.footer{
-            display: flex;
-            justify-content: center;
-            vertical-align: bottom;
-        }
-    </style>
-    <head>
-    </head>
-    <body>
-        <p class=footer valine="bottom">
-            <a href="{{ url_for('contact') }}">Contact Us</a>
-        </p>
-    </body>
-</html>

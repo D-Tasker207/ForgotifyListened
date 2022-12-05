@@ -1,19 +1,21 @@
 {% extends "base.html" %}
 
-{% block content %}
-
-<html>
-<head>
-    <title>My Most Forgotten Songs:</title>
-</head>
-<body>
+{% block app_content %}
     <h2>My Most Forgotten Songs:</h2>
-    {% if forgotten | length > 0 %}
-        {% for i in range(0,size) %}
-            <img src={{forgotten_img[i].img}} style="width:100px;height:100px;"><br>
-            <a href="{{ url_for('song', name=forgotten[i].name) }}">{{ forgotten[i].name }}</a><br>
-        {% endfor %}
+    {% if user.forgotten_songs.all() | length > 0 %}
+        <div class="row">
+            {% for i in range(0, user.forgotten_songs.all() | length) %}
+                <div class="col-md-2">
+                    <div class="card">
+                        <a href="{{ url_for('song', id=user.forgotten_songs[i].song.id) }}"><img class="card-img-top" src="{{ user.forgotten_songs[i].song.album.img }}"></a>
+                        <div class="card-title">
+                            <div class="text-center">
+                                <h5><a class="card-text" href="{{ url_for('song', id=user.forgotten_songs[i].song.id) }}">{{ user.forgotten_songs[i].song.name }}</a></h5>
+                            </div>
+                        </div>
+                    </div><br>
+                </div>
+            {% endfor %}
+        </div>
     {% endif %}
-</body>
-</html>
 {% endblock %}
