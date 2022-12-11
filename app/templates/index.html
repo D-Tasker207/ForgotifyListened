@@ -23,6 +23,23 @@
         </div>
     {% endif %}
     <h2>Recommended by Users:</h2>
+    {% if songs | length > 5 %}
+        <div class="row">
+            {% for i in range(0, 5) %}
+                <div class="col-md-2">
+                    <div class="card">
+                        <a href="{{ url_for('song', id=songs[i].id) }}"><img class="card-img-top" src="{{ songs[i].album.img }}"></a>
+                        <div class="card-title">
+                            <div class="text-center">
+                                <h5><a class="card-text" href="{{ url_for('song', id=songs[i].id) }}">{{ songs[i].name }}</a></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <br>
 {% else %}
 <h2>Most Forgotten (Overall on the Site):</h2>
     {% if mfs | length > 5 %}
@@ -42,5 +59,22 @@
         </div>
     {% endif %}
     <h2>Recommended by Users:</h2>
+    {% if songs | length > 5 %}
+        <div class="row">
+            {% for i in range(0, 5) %}
+                <div class="col-md-2">
+                    <div class="card">
+                        <a href="{{ url_for('song', id=songs[i].id) }}"><img class="card-img-top" src="{{ songs[i].album.img }}"></a>
+                        <div class="card-title">
+                            <div class="text-center">
+                                <h5><a class="card-text" href="{{ url_for('song', id=songs[i].id) }}">{{ songs[i].name }}</a></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <br>
 {% endif %}
 {% endblock %}

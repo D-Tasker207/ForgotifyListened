@@ -22,7 +22,8 @@ def before_request():
 @app.route('/index')
 def index():
     mfs = UserToSongF.query.all()
-    return render_template('index.html', mfs=mfs, title="Home")
+    songs = Song.query.order_by('rec_count').all()
+    return render_template('index.html', mfs=mfs, songs=songs, title="Home")
 
 @app.route('/artist/<id>')
 def artist(id):
